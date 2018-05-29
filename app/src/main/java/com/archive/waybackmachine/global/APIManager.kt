@@ -11,7 +11,9 @@ import com.github.kittinunf.result.success
 import org.json.JSONObject
 import java.sql.Array
 import android.os.AsyncTask.execute
+import android.webkit.MimeTypeMap
 import com.github.kittinunf.fuel.core.Blob
+import com.github.kittinunf.fuel.core.DataPart
 import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.httpPut
 import okhttp3.*
@@ -42,6 +44,8 @@ class APIManager private constructor(context: Context?) {
     private val ACCESS = "trS8dVjP8dzaE296"
     private val SECRET = "ICXDO78cnzUlPAt1"
     private var HEADER: MutableMap<String, String>
+    private var TIMEOUT = 60*1000*60
+    private var TIMEOUTREAD = 60*1000*60
 
     private val mContext: Context?
 
@@ -87,31 +91,33 @@ class APIManager private constructor(context: Context?) {
 
         val authorization = "LOW " + params["s3accesskey"] + ":" + params["s3secretkey"]
         val url = UploadURL + "/" + params["identifier"] + "/" + params["filename"]
+        val file = File(params["path"])
 
-    val file = File(params["path"])
-    url.httpPut()
-        .body(file.readBytes())
-        .header(
-            "Content-Type" to "application/x-www-form-urlencoded",
-            "X-File-Name" to params["filename"]!!,
-            "x-amz-acl" to "bucket-owner-full-control",
-            "x-amz-auto-make-bucket" to "1",
-            "x-archive-meta-collection" to "opensource_media",
-            "x-archive-meta-mediatype" to params["mediatype"]!!,
-            "x-archive-meta-title" to params["title"]!!,
-            "x-archive-meta-description" to params["description"]!!,
-            "x-archive-meta-subject" to params["tags"]!!,
-            "authorization" to authorization
-        ).responseJson {request, response, result ->
-            when (result) {
-                is Result.Failure -> {
-                    completion(false, null, null, response.hashCode().toString())
-                }
-                is Result.Success -> {
-                    completion(true, getFileSize(file.length()), url, null)
+        url.httpPut()
+            .body(file.readBytes())
+            .header(
+                "Content-Type" to "application/x-www-form-urlencoded",
+                "X-File-Name" to params["filename"]!!,
+                "x-amz-acl" to "bucket-owner-full-control",
+                "x-amz-auto-make-bucket" to "1",
+                "x-archive-meta-collection" to "opensource_media",
+                "x-archive-meta-mediatype" to params["mediatype"]!!,
+                "x-archive-meta-title" to params["title"]!!,
+                "x-archive-meta-description" to params["description"]!!,
+                "x-archive-meta-subject" to params["tags"]!!,
+                "authorization" to authorization)
+            .timeout(TIMEOUT)
+            .timeoutRead(TIMEOUTREAD)
+            .responseJson {request, response, result ->
+                when (result) {
+                    is Result.Failure -> {
+                        completion(false, null, null, response.hashCode().toString())
+                    }
+                    is Result.Success -> {
+                        completion(true, getFileSize(file.length()), url, null)
+                    }
                 }
             }
-        }
 
     }
 

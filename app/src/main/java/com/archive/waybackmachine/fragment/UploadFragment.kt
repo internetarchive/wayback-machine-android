@@ -58,7 +58,13 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
             val userInfo = AppManager.getInstance(mainActivity).userInfo
             if (userInfo == null) {
-                mainActivity?.replaceSigninFragment()
+                SweetAlertDialog(mainActivity, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Login is required")
+                        .setContentText("You need to login to upload photo or video")
+                        .setConfirmText("OK")
+                        .show()
+
+                mainActivity?.selectMenuItem(3)
             }
         }
     }
@@ -68,7 +74,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
         when (v.id) {
             R.id.btnAttach -> {
-                onAttach()
+                onAttachMedia()
             }
             R.id.btnUpload -> {
                 onUpload()
@@ -92,7 +98,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun onAttach() {
+    private fun onAttachMedia() {
         ImagePicker.create(this)
                 .returnMode(ReturnMode.ALL)
                 .folderMode(true)
@@ -152,7 +158,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(mainActivity).uploadFile(mapOf<String, String>(
+        APIManager.getInstance(mainActivity).uploadFile(mapOf(
                 "identifier" to identifier,
                 "title" to title,
                 "description" to description,

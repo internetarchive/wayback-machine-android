@@ -108,6 +108,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         selectFragment(navView.menu.getItem(index))
     }
 
+    fun selectMenuItem(index: Int) {
+        navView.selectedItemId = navView.menu.getItem(index).itemId
+        selectFragment(navView.menu.getItem(index))
+    }
+
     fun replaceSignupFragment() {
         val frag = SignupFragment.newInstance()
         val manager = supportFragmentManager
