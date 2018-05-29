@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.UploadFragment"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/title_upload"
+                android:id="@+id/textView2"
+                android:textSize="@dimen/fs_18"
+                android:textStyle="bold"
+                android:layout_marginTop="50dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/title"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:id="@+id/txtTitle"
+                android:textSize="@dimen/fs_16"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="30dp"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/txtDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:gravity="center_vertical"
+                android:hint="@string/description"
+                android:inputType="textMultiLine"
+                android:maxLines="5"
+                android:singleLine="false"
+                android:textSize="@dimen/fs_16" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/subject_tags"
+                android:padding="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:id="@+id/txtSubject"
+                android:textSize="@dimen/fs_16" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/preview">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo" />
+
+                <com.jarvanmo.exoplayerview.ui.ExoVideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:controller_display_mode="none">
+
+                </com.jarvanmo.exoplayerview.ui.ExoVideoView>
+
+            </FrameLayout>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/attach"
+                android:id="@+id/btnAttach"
+                android:layout_marginTop="30dp"
+                android:textAllCaps="false"
+                android:background="@drawable/button_background"
+                android:textSize="@dimen/fs_18"
+                android:textColor="@color/fcWhite"
+                android:textStyle="bold" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload"
+                android:id="@+id/btnUpload"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="false"
+                android:background="@drawable/button_background"
+                android:textSize="@dimen/fs_18"
+                android:textColor="@color/fcWhite"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

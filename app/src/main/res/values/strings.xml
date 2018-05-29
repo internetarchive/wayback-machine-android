@@ -1,0 +1,72 @@
+<resources>
+    <string name="app_name">Wayback Machine</string>
+
+    <string name="welcome">Welcome to Wayback Machine</string>
+    <string name="show_video">Show Video</string>
+    <string name="back">&lt; Back</string>
+    <string name="done">Done</string>
+    <string name="open_archived_url">Open</string>
+    <string name="save_page_now">Save Page Now</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="share_dlg_title">Share with your friend</string>
+    <string name="share_dlg_actions">Actions</string>
+    <string name="share_dlg_cancel">Cancel</string>
+    <string name="share_dlg_done">Done</string>
+    <string name="share_dlg_share">Share</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_help">Help</string>
+    <string name="tab_about">About</string>
+    <string name="tab_account">Account</string>
+    <string name="tab_upload">Upload</string>
+
+    <!-- Home -->
+    <string name="home_description">Archive or View Archived URLs from the</string>
+    <string name="home_edit_placeholder">Enter a URL</string>
+    <string name="home_btn_save">Archive Page Now</string>
+    <string name="home_btn_recent">View Recent Version</string>
+    <string name="home_btn_first">View First Version</string>
+    <string name="home_btn_overview">Overview of all Archives</string>
+    <string name="home_error_message">Cannot connect to server. Please try again.</string>>
+
+    <!-- Help -->
+    <string name="help_btn_previous">Previous</string>
+    <string name="help_btn_next">Next</string>
+    <string name="help_txt_welcome">Welcome to Wayback Machine!</string>
+    <string name="help_txt_archive">Archive Web Pages and Tweets to the Wayback Machine.</string>
+    <string name="help_txt_save">Save From Anywhere</string>
+    <string name="help_txt_description1">"When you're using your Android phone or tablet and find an interesting article, blog post, or webpage. You can save it to Wayback Machine so you can return to it later. Just look for the Share button, which can be found in your device's menu, or when tapping the Share menu from any apps. Here's what some common Share buttons looks like on Android:"</string>
+    <string name="help_txt_description2">"Once you've found the Share menu, tap &quot;Wayback Machine&quot;, and a link will be saved to Wayback Machine."</string>
+    <string name="help_txt_share">Share the Archived URL</string>
+    <string name="help_txt_description3">Follow these simple steps to share the archived URL with your friends.</string>
+    <string name="help_txt_description4">1. Tap the Share button</string>
+    <string name="help_txt_description5">2. Tap any app you want to share, and then tap Share button</string>
+    <!-- About -->
+    <string name="support">Please send bug reports, questions and suggestions to info@archive.org</string>
+    <string name="version">Version:</string>
+
+    <!-- Account -->
+    <string name="logout">Logout</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="no_account">"Don't have an account?"</string>
+    <string name="email">Email</string>
+    <string name="pwd">Password</string>
+    <string name="confirm_pwd">Confirm Password</string>
+    <string name="username">Username</string>
+    <string name="title_signup">Create an Account</string>
+    <string name="btn_continue">Continue</string>
+
+    <!-- Upload -->
+    <string name="title_upload">Upload to Your Library</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="subject_tags">Subject Tags</string>
+    <string name="attach">Attach Video or Photo</string>
+    <string name="upload">Upload</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_photo_preview">PhotoPreviewActivity</string>
+
+</resources>

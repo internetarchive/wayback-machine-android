@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="wmMain">#a92e33</color>
+
+    <color name="clear">#00000000</color>
+    <color name="white">#ffffff</color>
+
+    <color name="fcBlue">#038bfa</color>
+    <color name="fcWhite">#ffffff</color>
+    <color name="fcBlack">#000000</color>
+    <color name="fcGray">#535353</color>
+    <color name="hcGreen">#22b573</color>
+    <color name="bcGreen">#22b573</color>
+    <color name="shareContentColorGreen">#22b573</color>
+    <color name="shareContentColorYellow">#ecb754</color>
+    <color name="indicatorColorGray">#bababa</color>
+    <color name="indicatorContainerColor">#70000000</color>
+    <color name="imageOverlayColor">#20000000</color>
+
+</resources>

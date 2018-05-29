@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.archive.waybackmachine.activity.WebpageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/wmMain"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/btnBack"
+                android:layout_gravity="center_vertical"
+                android:text="@string/back"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/fs_18"
+                android:textColor="@color/fcWhite"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/btnOpen"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="50dp"
+                android:src="@mipmap/ic_browser" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/btnShare"
+                android:layout_gravity="center_vertical|right"
+                android:src="@mipmap/ic_share"
+                android:layout_marginRight="10dp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/webView"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/indicatorContainerColor"
+        android:id="@+id/containerIndicator">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/indicator_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/AVLoadingIndicatorView"
+            android:visibility="visible"
+            app:indicatorName="BallSpinFadeLoaderIndicator"
+            app:indicatorColor="@color/white"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</FrameLayout>

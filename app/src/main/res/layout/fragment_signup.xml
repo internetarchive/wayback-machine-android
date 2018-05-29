@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.SignupFragment"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/title_signup"
+                android:id="@+id/textView2"
+                android:textSize="@dimen/fs_20"
+                android:textStyle="bold"
+                android:layout_marginTop="50dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/username"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:id="@+id/ctxtUsername"
+                android:textSize="@dimen/fs_18"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="40dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:id="@+id/ctxtEmail"
+                android:textSize="@dimen/fs_18"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/pwd"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:id="@+id/ctxtPassword"
+                android:textSize="@dimen/fs_18"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/confirm_pwd"
+                android:padding="10dp"
+                android:ems="10"
+                android:background="@drawable/edit_background"
+                android:id="@+id/ctxtConfirmPassword"
+                android:textSize="@dimen/fs_18"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="10dp" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:id="@+id/btnCancel"
+                android:layout_marginTop="40dp"
+                android:textAllCaps="false"
+                android:background="@drawable/button_background"
+                android:padding="2dp"
+                android:textSize="@dimen/fs_18"
+                android:textColor="@color/fcWhite"
+                android:textStyle="bold" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_continue"
+                android:id="@+id/btnContinue"
+                android:layout_marginTop="20dp"
+                android:textAllCaps="false"
+                android:background="@drawable/button_background"
+                android:padding="2dp"
+                android:textSize="@dimen/fs_18"
+                android:textColor="@color/fcWhite"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

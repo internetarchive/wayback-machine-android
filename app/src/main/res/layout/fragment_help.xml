@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    xmlns:attrs="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.HelpFragment"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="18"/>
+
+    <FrameLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_weight="1">
+
+        <com.rd.PageIndicatorView
+            android:id="@+id/pageIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            attrs:piv_padding="10dp"
+            attrs:piv_radius="4dp"
+            attrs:piv_selectedColor="@color/wmMain"
+            attrs:piv_unselectedColor="@color/indicatorColorGray"
+            android:layout_gravity="center"
+            android:padding="5dp" />
+
+
+    </FrameLayout>
+
+</LinearLayout>
