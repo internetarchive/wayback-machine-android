@@ -8,15 +8,22 @@ import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.archive.waybackmachine.R
 import com.archive.waybackmachine.activity.MainActivity
 import com.archive.waybackmachine.activity.PhotoPreviewActivity
 import com.archive.waybackmachine.activity.VideoPreviewActivity
+import com.archive.waybackmachine.activity.WebpageActivity
 import com.archive.waybackmachine.global.APIManager
 import com.archive.waybackmachine.global.AppManager
 import com.esafirm.imagepicker.features.ImagePicker
@@ -158,18 +165,37 @@ class UploadFragment : Fragment(), View.OnClickListener {
         ), { success, uploaded, url, err ->
             mainActivity?.runOnUiThread({
                 mainActivity?.hideProgressBar()
-//                if (success) {
-//                    AppManager.getInstance(mainActivity).displayToast("Successfully Uploaded")
-//                } else {
-//                    AppManager.getInstance(mainActivity).displayToast("Failed : $err")
-//                }
+
                 val endTime = System.currentTimeMillis()
                 val duration = formatTime((endTime - startTime) / 1000L)
 
                 if (success) {
+                    val txtView = TextView(context)
+                    txtView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    val spannable = SpannableString("Uploaded $uploaded \n In $duration \n Available here " +
+                            "https://archive.org/details/$identifier")
+                    val iStart = spannable.toString().indexOf("https://")
+                    val iEnd = spannable.toString().length
+                    val clickableSpan = object: ClickableSpan() {
+                        override fun onClick(view: View?) {
+                            val intent = Intent(mainActivity, WebpageActivity::class.java)
+                            intent.putExtra("URL", spannable.toString().substring(iStart))
+                            startActivity(intent)
+                        }
+
+                        override fun updateDrawState(ds: TextPaint?) {
+                            super.updateDrawState(ds)
+                            ds?.isUnderlineText = false
+                            ds?.color = resources.getColor(R.color.fcBlue)
+                        }
+                    }
+                    spannable.setSpan(clickableSpan, iStart, iEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    txtView.text = spannable
+                    txtView.movementMethod = LinkMovementMethod.getInstance()
+
                     SweetAlertDialog(mainActivity, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("Successfully Uploaded")
-                            .setContentText("Uploaded: $uploaded \n In: $duration \n : Available here: $url")
+                            .setCustomView(txtView)
                             .setConfirmText("OK")
                             .show()
                 } else {
@@ -204,7 +230,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
         return true
     }
 
-    private fun formatTime(totalSeconds: Long) {
+    private fun formatTime(totalSeconds: Long): String {
         val minutes_in_an_hour = 60
         val seconds_in_a_minute = 60
 
@@ -215,14 +241,16 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
         var ret: String = ""
         if (hours > 0) {
-            ret += hours.toString() + "hours"
+            ret += hours.toString() + "hrs"
         }
         if (minutes > 0) {
-            ret += minutes.toString() + "minutes"
+            ret += minutes.toString() + "mins"
         }
         if (seconds > 0) {
-            ret += seconds.toString() + "seconds"
+            ret += seconds.toString() + "secs"
         }
+
+        return ret
     }
 
     companion object {

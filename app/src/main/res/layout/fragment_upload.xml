@@ -93,8 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/logo" />
+                    android:scaleType="fitCenter" />
 
                 <com.jarvanmo.exoplayerview.ui.ExoVideoView
                     android:id="@+id/videoView"

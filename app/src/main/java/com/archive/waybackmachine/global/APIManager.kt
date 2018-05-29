@@ -13,6 +13,7 @@ import java.sql.Array
 import android.os.AsyncTask.execute
 import com.github.kittinunf.fuel.core.Blob
 import com.github.kittinunf.fuel.core.Method
+import com.github.kittinunf.fuel.httpPut
 import okhttp3.*
 import java.io.IOException
 import okhttp3.Cookie
@@ -87,71 +88,21 @@ class APIManager private constructor(context: Context?) {
         val authorization = "LOW " + params["s3accesskey"] + ":" + params["s3secretkey"]
         val url = UploadURL + "/" + params["identifier"] + "/" + params["filename"]
 
-        /*************************/
-//        val file = File(params["path"])
-//        val client = OkHttpClient()
-//        val requestBody =MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("X-File-Name", params["filename"]!!,
-//                        RequestBody.create(MediaType.parse("multipart/form-data"), file))
-//                .build()
-//
-//        val request = Request.Builder()
-//                .url(url)
-//                .addHeader("X-File-Name", params["filename"]!!)
-//                .addHeader("x-amz-acl", "bucket-owner-full-control")
-//                .addHeader("x-amz-auto-make-bucket", "1")
-//                .addHeader("x-archive-meta-collection", "opensource_media")
-//                .addHeader("x-archive-meta-mediatype", params["mediatype"]!!)
-//                .addHeader("x-archive-meta-title", params["title"]!!)
-//                .addHeader("x-archive-meta-description", params["description"]!!)
-//                .addHeader("x-archive-meta-subject", params["tags"]!!)
-//                .addHeader("authorization", authorization)
-//                .put(requestBody)
-//                .build()
-//
-//        client.newCall(request).enqueue(object: Callback{
-//            override fun onResponse(call: Call?, response: Response?) {
-//                if (response != null) {
-//                    print(response.body()?.string())
-//                } else {
-//                    completion(false, null, null, call.toString())
-//                }
-//
-//            }
-//
-//            override fun onFailure(call: Call?, e: IOException?) {
-//                completion(false, null, null, e?.hashCode().toString())
-//            }
-//        })
-
-        /*************************/
-        HEADER["X-File-Name"] = params["filename"]!!
-        HEADER["x-amz-acl"] = "bucket-owner-full-control"
-        HEADER["x-amz-auto-make-bucket"] = "1"
-        HEADER["x-archive-meta-collection"] = "opensource_media"
-        HEADER["x-archive-meta-mediatype"] = params["mediatype"]!!
-        HEADER["x-archive-meta-title"] = params["title"]!!
-        HEADER["x-archive-meta-description"] = params["description"]!!
-        HEADER["x-archive-meta-subject"] = params["tags"]!!
-        HEADER["authorization"] = authorization
-
-        FuelManager.instance.baseHeaders = HEADER
-
-        val file = File(params["path"])
-        val blob = Blob(params["filename"]!!, file.length(), {file.inputStream()})
-
-        Fuel.upload(url, Method.PUT).source{ request, url ->
-            // here end - test58
-            file
-        }.interrupt {request ->
-            print(request.headers)
-        }.progress { readBytes, totalBytes ->
-            println("ReadBytes:")
-            println(readBytes)
-            println("totalBytes:")
-            println(totalBytes)
-        }.responseString {request, response, result ->
+    val file = File(params["path"])
+    url.httpPut()
+        .body(file.readBytes())
+        .header(
+            "Content-Type" to "application/x-www-form-urlencoded",
+            "X-File-Name" to params["filename"]!!,
+            "x-amz-acl" to "bucket-owner-full-control",
+            "x-amz-auto-make-bucket" to "1",
+            "x-archive-meta-collection" to "opensource_media",
+            "x-archive-meta-mediatype" to params["mediatype"]!!,
+            "x-archive-meta-title" to params["title"]!!,
+            "x-archive-meta-description" to params["description"]!!,
+            "x-archive-meta-subject" to params["tags"]!!,
+            "authorization" to authorization
+        ).responseJson {request, response, result ->
             when (result) {
                 is Result.Failure -> {
                     completion(false, null, null, response.hashCode().toString())

@@ -11,7 +11,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 27
         versionCode 17
-        versionName "1.5.0"
+        versionName "1.5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -48,5 +48,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
     implementation 'com.jarvanmo:exoplayerview:2.0.7'
-    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+    implementation 'com.github.f0ris.sweetalert:library:1.5.3'
 }
