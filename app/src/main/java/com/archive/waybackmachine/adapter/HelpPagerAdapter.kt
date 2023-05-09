@@ -1,10 +1,11 @@
 package com.archive.waybackmachine.adapter
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.archive.waybackmachine.R
 
 class HelpPagerAdapter : PagerAdapter() {
@@ -13,8 +14,8 @@ class HelpPagerAdapter : PagerAdapter() {
         return 3
     }
 
-    override fun instantiateItem(collection: View, position: Int): Any {
-        val inflater = collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val inflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var resId = 0
         when (position) {
             0 -> resId = R.layout.page_help_1
@@ -22,17 +23,17 @@ class HelpPagerAdapter : PagerAdapter() {
             2 -> resId = R.layout.page_help_3
         }
 
-        val view = inflater!!.inflate(resId, null)
-        (collection as ViewPager).addView(view, 0)
+        val view = inflater.inflate(resId, container, false)
+        container.addView(view)
 
         return view
     }
 
-    override fun destroyItem(container: View, position: Int, `object`: Any) {
-        (container as ViewPager).removeView(`object` as View)
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object` as View
+        return view === `object`
     }
 }

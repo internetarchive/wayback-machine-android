@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,25 +45,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView6"
-                    android:src="@drawable/logo"
+                    app:srcCompat="@drawable/logo"
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:layout_marginTop="15dp" />
 
                 <EditText
+                    android:id="@+id/txtURL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textUri"
-                    android:hint="@string/home_edit_placeholder"
-                    android:padding="10dp"
-                    android:ems="10"
-                    android:id="@+id/txtURL"
-                    android:textSize="@dimen/fs_16"
-                    android:layout_marginBottom="0dp"
                     android:layout_marginLeft="0dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp"
                     android:background="@drawable/edit_background"
-                    android:layout_marginTop="30dp" />
+                    android:ems="10"
+                    android:hint="@string/home_edit_placeholder"
+                    android:inputType="textUri"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    android:textSize="@dimen/fs_16" />
 
                 <Button
                     android:layout_width="fill_parent"

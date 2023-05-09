@@ -2,11 +2,11 @@ package com.archive.waybackmachine.global
 
 
 import android.Manifest
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 import java.util.ArrayList
 
@@ -20,7 +20,7 @@ class PermissionManager private constructor(context: Context?) {
         mContext = context
     }
 
-    fun requestPermissions(activity: Activity, permissions: IntArray, requestCode: Int) {
+    fun requestPermissions(activity: AppCompatActivity, permissions: IntArray, requestCode: Int) {
 
         val permissionArrayList = ArrayList<String>()
 

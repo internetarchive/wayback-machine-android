@@ -53,20 +53,20 @@ class AppManager private constructor(context: Context?) {
             }
         }
         get() {
-            val prefs = this.prefs
-            return if (prefs != null) {
-                val username = prefs.getString(UsernameKey, "")
-                val email = prefs.getString(EmailKey, "")
-                val loggedInSig = prefs.getString(LoggedInSigKey, "")
-                val loggedInUser = prefs.getString(LoggedInUserKey, "")
-                val password = prefs.getString(PasswordKey, "")
-                val s3AccessKey = prefs.getString(S3AccessKey, "")
-                val s3SecretKey = prefs.getString(S3SecretKey, "")
+            val preferences = this.prefs
+            return if (preferences != null) {
+                val username = preferences.getString(UsernameKey, "")
+                val email = preferences.getString(EmailKey, "")
+                val loggedInSig = preferences.getString(LoggedInSigKey, "")
+                val loggedInUser = preferences.getString(LoggedInUserKey, "")
+                val password = preferences.getString(PasswordKey, "")
+                val s3AccessKey = preferences.getString(S3AccessKey, "")
+                val s3SecretKey = preferences.getString(S3SecretKey, "")
 
-                if (username.isEmpty() && email.isEmpty()) {
+                if (username.isNullOrEmpty() && email.isNullOrEmpty()) {
                     null
                 } else {
-                    UserModel(username, email, loggedInSig, loggedInUser, password, s3AccessKey, s3SecretKey)
+                    UserModel(username!!, email!!, loggedInSig!!, loggedInUser!!, password!!, s3AccessKey!!, s3SecretKey!!)
                 }
             } else {
                 null

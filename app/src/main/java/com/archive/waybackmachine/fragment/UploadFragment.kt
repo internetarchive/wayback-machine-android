@@ -4,10 +4,11 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import androidx.core.content.ContextCompat
 import android.media.Image
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -37,6 +38,8 @@ class UploadFragment : Fragment(), View.OnClickListener {
     private var resourcePath: String? = null
     private var fileExt: String? = null
     private var mediaType: String? = null
+    private lateinit var mContext: Context
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -158,7 +161,8 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(mainActivity).uploadFile(mapOf(
+        APIManager.getInstance(mainActivity).uploadFile(
+            mapOf(
                 "identifier" to identifier,
                 "title" to title,
                 "description" to description,
@@ -168,8 +172,9 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 "s3accesskey" to s3accesskey,
                 "s3secretkey" to s3secretkey,
                 "mediatype" to mediaType!!
-        ), { success, uploaded, url, err ->
-            mainActivity?.runOnUiThread({
+            ) as Map<String, String>
+        ) { success, uploaded, url, err ->
+            mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
 
                 val endTime = System.currentTimeMillis()
@@ -178,21 +183,25 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 if (success) {
                     val txtView = TextView(context)
                     txtView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                    val spannable = SpannableString("Uploaded $uploaded \n In $duration \n Available here " +
-                            "https://archive.org/details/$identifier")
+                    val spannable = SpannableString(
+                        "Uploaded $uploaded \n In $duration \n Available here " +
+                                "https://archive.org/details/$identifier"
+                    )
                     val iStart = spannable.toString().indexOf("https://")
                     val iEnd = spannable.toString().length
-                    val clickableSpan = object: ClickableSpan() {
-                        override fun onClick(view: View?) {
+                    val clickableSpan = object : ClickableSpan() {
+                        override fun onClick(widget: View) {
                             val intent = Intent(mainActivity, WebpageActivity::class.java)
                             intent.putExtra("URL", spannable.toString().substring(iStart))
                             startActivity(intent)
                         }
 
-                        override fun updateDrawState(ds: TextPaint?) {
-                            super.updateDrawState(ds)
+                        override fun updateDrawState(ds: TextPaint) {
+                            if (ds != null) {
+                                super.updateDrawState(ds)
+                            }
                             ds?.isUnderlineText = false
-                            ds?.color = resources.getColor(R.color.fcBlue)
+                            ds?.color = ContextCompat.getColor(mContext, R.color.fcBlue)
                         }
                     }
                     spannable.setSpan(clickableSpan, iStart, iEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -200,19 +209,19 @@ class UploadFragment : Fragment(), View.OnClickListener {
                     txtView.movementMethod = LinkMovementMethod.getInstance()
 
                     SweetAlertDialog(mainActivity, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Successfully Uploaded")
-                            .setCustomView(txtView)
-                            .setConfirmText("OK")
-                            .show()
+                        .setTitleText("Successfully Uploaded")
+                        .setCustomView(txtView)
+                        .setConfirmText("OK")
+                        .show()
                 } else {
                     SweetAlertDialog(mainActivity, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Uploading failed")
-                            .setContentText(err)
-                            .setConfirmText("OK")
-                            .show()
+                        .setTitleText("Uploading failed")
+                        .setContentText(err)
+                        .setConfirmText("OK")
+                        .show()
                 }
-            })
-        })
+            }
+        }
     }
 
     private fun validateFields() : Boolean {

@@ -10,7 +10,6 @@ import com.github.kittinunf.result.Result
 import com.github.kittinunf.result.success
 import org.json.JSONObject
 import java.sql.Array
-import android.os.AsyncTask.execute
 import android.webkit.MimeTypeMap
 import com.github.kittinunf.fuel.core.Blob
 import com.github.kittinunf.fuel.core.DataPart
@@ -131,7 +130,8 @@ class APIManager private constructor(context: Context?) {
             "email" to email,
             "password" to password,
             "verified" to false
-        ), API_CREATE, {success, data, errCode ->
+        ), API_CREATE
+        ) { success, data, errCode ->
             if (success) {
                 val register_success = data?.getBoolean("success")
                 if (register_success != null) {
@@ -146,7 +146,7 @@ class APIManager private constructor(context: Context?) {
             } else {
                 completion(false, errCode?.toString())
             }
-        })
+        }
     }
 
     // Login
@@ -157,7 +157,8 @@ class APIManager private constructor(context: Context?) {
         SendDataToService(listOf(
             "email" to email,
             "password" to password
-        ), API_LOGIN, {success, data, errCode ->
+        ), API_LOGIN
+        ) { success, data, errCode ->
             if (success) {
                 val login_success = data?.getBoolean("success")
 
@@ -175,7 +176,7 @@ class APIManager private constructor(context: Context?) {
             } else {
                 completion(false, errCode.toString())
             }
-        })
+        }
 
     }
 
@@ -184,7 +185,8 @@ class APIManager private constructor(context: Context?) {
                        completion: (Boolean, String?, Int?) -> Unit) {
         SendDataToService(listOf(
             "email" to email
-        ), API_INFO, {success, data, errCode ->
+        ), API_INFO
+        ) { success, data, errCode ->
             if (success) {
                 val values = data?.getJSONObject("values")
                 val username = values?.getString("screenname")
@@ -192,7 +194,7 @@ class APIManager private constructor(context: Context?) {
             } else {
                 completion(false, null, errCode)
             }
-        })
+        }
     }
 
     // Get IAS3Key
@@ -284,7 +286,7 @@ class APIManager private constructor(context: Context?) {
 
         client.newCall(request).enqueue(object: Callback{
             override fun onResponse(call: Call?, response: Response?) {
-                if (response != null && response?.priorResponse() != null) {
+                if (response?.priorResponse() != null) {
                     val cookies = response.priorResponse()?.headers("Set-Cookie")
                     val loggedInSig = cookies!![1].split(";")[0].split("=")[1]
                     val loggedInUser = email

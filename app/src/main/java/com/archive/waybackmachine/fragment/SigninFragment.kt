@@ -3,7 +3,7 @@ package com.archive.waybackmachine.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,26 +63,36 @@ class SigninFragment : Fragment(), View.OnClickListener {
     private fun login(email: String, password: String) {
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(mainActivity).login(email, password, {success, error ->
+        APIManager.getInstance(mainActivity).login(email, password) { success, error ->
             if (!success) {
                 AppManager.getInstance(mainActivity).displayToast(error!!)
             } else {
-                APIManager.getInstance(mainActivity).getUsername(email, {_, username, error ->
-                    APIManager.getInstance(mainActivity).getCookieData(email, password, {_, loggedInSig, loggedInUser, _ ->
-                        APIManager.getInstance(mainActivity).getIAS3Keys(loggedInSig!!, loggedInUser!!, {_, access, secret, _ ->
+                APIManager.getInstance(mainActivity).getUsername(email) { _, username, error ->
+                    APIManager.getInstance(mainActivity)
+                        .getCookieData(email, password) { _, loggedInSig, loggedInUser, _ ->
+                            APIManager.getInstance(mainActivity).getIAS3Keys(
+                                loggedInSig!!,
+                                loggedInUser!!
+                            ) { _, access, secret, _ ->
 
-                            mainActivity?.runOnUiThread({
-                                mainActivity?.hideProgressBar()
-                                AppManager.getInstance(mainActivity).userInfo = UserModel(
-                                        username!!, email, loggedInSig, loggedInUser, password, access!!, secret!!
-                                )
-                                mainActivity?.replaceAccountFragment()
-                            })
-                        })
-                    })
-                })
+                                mainActivity?.runOnUiThread {
+                                    mainActivity?.hideProgressBar()
+                                    AppManager.getInstance(mainActivity).userInfo = UserModel(
+                                        username!!,
+                                        email,
+                                        loggedInSig,
+                                        loggedInUser,
+                                        password,
+                                        access!!,
+                                        secret!!
+                                    )
+                                    mainActivity?.replaceAccountFragment()
+                                }
+                            }
+                        }
+                }
             }
-        })
+        }
     }
 
     companion object {

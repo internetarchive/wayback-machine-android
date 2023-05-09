@@ -1,20 +1,18 @@
 package com.archive.waybackmachine.activity
 
-import android.support.v7.app.AppCompatActivity
-import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.NavigationView
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.archive.waybackmachine.R
 import com.archive.waybackmachine.fragment.*
 import com.archive.waybackmachine.global.AppManager
 import com.archive.waybackmachine.global.PermissionManager
 import com.archive.waybackmachine.helper.BottomNavigationViewHelper
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.CookieManager
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -52,9 +50,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        outState!!.putInt(SELECTED_MENU_ITEM, mSelectedMenuItem)
-        super.onSaveInstanceState(outState, outPersistentState)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SELECTED_MENU_ITEM, mSelectedMenuItem)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onBackPressed() {
@@ -96,10 +94,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         navView.menu.findItem(mSelectedMenuItem).isChecked = true
 
         if (frag != null) {
-            val manager =
-                    supportFragmentManager
-                            .beginTransaction()
-                            .replace(container.id, frag)
+            val manager = supportFragmentManager.beginTransaction()
+            manager.replace(container.id, frag)
             manager.commit()
         }
     }
@@ -115,25 +111,22 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     fun replaceSignupFragment() {
         val frag = SignupFragment.newInstance()
-        val manager = supportFragmentManager
-                            .beginTransaction()
-                            .replace(container.id, frag)
+        val manager = supportFragmentManager.beginTransaction()
+        manager.replace(container.id, frag)
         manager.commit()
     }
 
     fun replaceAccountFragment() {
         val frag = AccountFragment.newInstance()
-        val manager = supportFragmentManager
-                .beginTransaction()
-                .replace(container.id, frag)
+        val manager = supportFragmentManager.beginTransaction()
+        manager.replace(container.id, frag)
         manager.commit()
     }
 
     fun replaceSigninFragment() {
         val frag = SigninFragment.newInstance()
-        val manager = supportFragmentManager
-                .beginTransaction()
-                .replace(container.id, frag)
+        val manager = supportFragmentManager.beginTransaction()
+        manager.replace(container.id, frag)
         manager.commit()
     }
 
@@ -144,5 +137,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     fun hideProgressBar() {
         containerIndicator.visibility = View.INVISIBLE
     }
-
 }
+
+
