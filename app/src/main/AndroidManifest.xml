@@ -17,35 +17,36 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
-        android:exported="true"
         >
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.WebpageActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.WebpageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="exported-activity"/>
         <activity
             android:name=".activity.SavepageActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="exported-activity"/>
         <activity
             android:name=".activity.OfferdialogActivity"
             android:theme="@style/Theme.TransparentDim"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="exported-activity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
@@ -53,12 +54,14 @@
             android:name=".activity.PhotoPreviewActivity"
             android:label="@string/title_activity_photo_preview"
             android:theme="@style/AppTheme"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.VideoPreviewActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="exported-activity"/>
+        <activity
+            android:name=".activity.VideoPreviewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="exported-activity">
         </activity>
     </application>
-
 </manifest>

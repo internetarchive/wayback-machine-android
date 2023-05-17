@@ -62,18 +62,18 @@ class SignupFragment : Fragment(), View.OnClickListener {
         val email = ctxtEmail.text.toString()
         val password = ctxtPassword.text.toString()
 
-        APIManager.getInstance(mainActivity).registerAccount(email, password, username, {success, err ->
-            mainActivity?.runOnUiThread({
+        APIManager.getInstance(mainActivity).registerAccount(email, password, username) { success, err ->
+            mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
-
                 if (success) {
-                    AppManager.getInstance(mainActivity).displayToast("We just sent verification email. Please try to verify your account.")
+                    AppManager.getInstance(mainActivity)
+                        .displayToast("We just sent verification email. Please try to verify your account.")
                     mainActivity?.replaceSigninFragment()
                 } else {
                     AppManager.getInstance(mainActivity).displayToast(err!!)
                 }
-            })
-        })
+            }
+        }
     }
 
     private fun validateFields(): Boolean {

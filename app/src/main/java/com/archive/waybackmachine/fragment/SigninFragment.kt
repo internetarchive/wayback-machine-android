@@ -1,6 +1,5 @@
 package com.archive.waybackmachine.fragment
 
-
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -63,33 +62,40 @@ class SigninFragment : Fragment(), View.OnClickListener {
     private fun login(email: String, password: String) {
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(mainActivity).login(email, password) { success, error ->
+        APIManager.getInstance(mainActivity).login(email, password) { success, error, data->
             if (!success) {
                 AppManager.getInstance(mainActivity).displayToast(error!!)
+                mainActivity?.hideProgressBar()
             } else {
-                APIManager.getInstance(mainActivity).getUsername(email) { _, username, error ->
-                    APIManager.getInstance(mainActivity)
-                        .getCookieData(email, password) { _, loggedInSig, loggedInUser, _ ->
-                            APIManager.getInstance(mainActivity).getIAS3Keys(
-                                loggedInSig!!,
-                                loggedInUser!!
-                            ) { _, access, secret, _ ->
 
-                                mainActivity?.runOnUiThread {
-                                    mainActivity?.hideProgressBar()
-                                    AppManager.getInstance(mainActivity).userInfo = UserModel(
-                                        username!!,
-                                        email,
-                                        loggedInSig,
-                                        loggedInUser,
-                                        password,
-                                        access!!,
-                                        secret!!
-                                    )
-                                    mainActivity?.replaceAccountFragment()
-                                }
-                            }
-                        }
+                // Retrieve the "values" JSONObject
+                val valuesObject = data?.getJSONObject("values")
+
+                // Retrieve the "cookies" JSONObject
+                val cookiesObject = valuesObject?.getJSONObject("cookies")
+
+                // Retrive the s3 JSONObject
+                val s3Data = valuesObject?.getJSONObject("s3")
+
+                // Retrieve the value of the "logged-in-sig" key
+                val loggedInSig = cookiesObject?.getString("logged-in-sig")
+                val loggedInUser = valuesObject?.getString("email")
+                val username = valuesObject?.getString("screenname")
+                val access = s3Data?.getString("access")
+                val secret = s3Data?.getString("secret")
+
+                mainActivity?.runOnUiThread {
+                    mainActivity?.hideProgressBar()
+                    AppManager.getInstance(mainActivity).userInfo = UserModel(
+                        username!!,
+                        email,
+                        loggedInSig,
+                        loggedInUser,
+                        password,
+                        access!!,
+                        secret!!
+                    )
+                    mainActivity?.replaceAccountFragment()
                 }
             }
         }

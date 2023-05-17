@@ -31,7 +31,7 @@ class APIManager private constructor(context: Context?) {
 
     private val BaseURL = "https://archive.org/"
     private val API_CREATE = "services/xauthn/?op=create"
-    private val API_LOGIN = "services/xauthn/?op=authenticate"
+    private val API_LOGIN = "services/xauthn/?op=login"
     private val API_INFO = "services/xauthn/?op=info"
     private val API_AVAILABILITY = "wayback/available"
     private val API_S3_KEY = "account/s3.php?output_json=1"
@@ -152,7 +152,7 @@ class APIManager private constructor(context: Context?) {
     // Login
     fun login(email: String,
               password: String,
-              completion: (Boolean, String?) -> Unit) {
+              completion: (Boolean, String?, JSONObject?) -> Unit) {
 
         SendDataToService(listOf(
             "email" to email,
@@ -161,147 +161,149 @@ class APIManager private constructor(context: Context?) {
         ) { success, data, errCode ->
             if (success) {
                 val login_success = data?.getBoolean("success")
-
                 if (login_success != null) {
                     if (login_success) {
-                        completion(true, null)
+                        completion(true, null, data)
                     } else {
                         val values = data?.getJSONObject("values")
                         val reason = values?.getString("reason")
-                        completion(false, Errors[reason])
+                        completion(false, Errors[reason], null)
                     }
                 } else {
-                    completion(false, errCode.toString())
+                    completion(false, errCode.toString(), null)
                 }
             } else {
-                completion(false, errCode.toString())
+                completion(false, errCode.toString(), null)
             }
         }
 
     }
 
     // Get Account Info
-    fun getUsername(email: String,
-                       completion: (Boolean, String?, Int?) -> Unit) {
-        SendDataToService(listOf(
-            "email" to email
-        ), API_INFO
-        ) { success, data, errCode ->
-            if (success) {
-                val values = data?.getJSONObject("values")
-                val username = values?.getString("screenname")
-                completion(true, username, null)
-            } else {
-                completion(false, null, errCode)
-            }
-        }
-    }
+//    fun getUsername(email: String,
+//                       completion: (Boolean, String?, Int?) -> Unit) {
+//        SendDataToService(listOf(
+//            "email" to email
+//        ), API_INFO
+//        ) { success, data, errCode ->
+//            if (success) {
+//                val values = data?.getJSONObject("values")
+//                val username = values?.getString("screenname")
+//                completion(true, username, null)
+//            } else {
+//                completion(false, null, errCode)
+//            }
+//        }
+//    }
 
     // Get IAS3Key
-    fun getIAS3Keys(loggedInSig: String, loggedInUser:String, completion: (Boolean, String?, String?, Int?) -> Unit) {
-        val client = OkHttpClient().newBuilder()
-                .cookieJar(object: CookieJar{
-                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-                    }
-                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
-                        val cookies = ArrayList<Cookie>(3)
-                        cookies.add(Cookie.Builder()
-                                .domain("archive.org")
-                                .path("/")
-                                .name("test-cookie")
-                                .value("1")
-                                .build())
-                        cookies.add(Cookie.Builder()
-                                .domain("archive.org")
-                                .path("/")
-                                .name("logged-in-sig")
-                                .value(loggedInSig)
-                                .build())
-                        cookies.add(Cookie.Builder()
-                                .domain("archive.org")
-                                .path("/")
-                                .name("logged-in-user")
-                                .value(loggedInUser)
-                                .build())
-                        return cookies
-                    }
-                }).build()
-
-        val request = Request.Builder()
-                .url(BaseURL + API_S3_KEY)
-                .get()
-                .addHeader("cache-control", "no-cache")
-                .build()
-
-        client.newCall(request).enqueue(object: Callback{
-            override fun onResponse(call: Call?, response: Response?) {
-                if (response != null) {
-                    val jsonData = response.body()?.string()
-                    val json = JSONObject(jsonData)
-                    val keys = json.getJSONObject("key")
-                    val accessKey = keys.getString("s3accesskey")
-                    val secretKey = keys.getString("s3secretkey")
-                    completion(true, accessKey, secretKey, null)
-                } else {
-                    completion(false, null, null, call?.hashCode())
-                }
-
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                completion(false, null, null, e?.hashCode())
-            }
-        })
-    }
+//    fun getIAS3Keys(loggedInSig: String, loggedInUser:String, completion: (Boolean, String?, String?, Int?) -> Unit) {
+//        val client = OkHttpClient().newBuilder()
+//                .cookieJar(object: CookieJar{
+//                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
+//                    }
+//                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
+//                        val cookies = ArrayList<Cookie>(3)
+//                        cookies.add(Cookie.Builder()
+//                                .domain("archive.org")
+//                                .path("/")
+//                                .name("test-cookie")
+//                                .value("1")
+//                                .build())
+//                        cookies.add(Cookie.Builder()
+//                                .domain("archive.org")
+//                                .path("/")
+//                                .name("logged-in-sig")
+//                                .value(loggedInSig)
+//                                .build())
+//                        cookies.add(Cookie.Builder()
+//                                .domain("archive.org")
+//                                .path("/")
+//                                .name("logged-in-user")
+//                                .value(loggedInUser)
+//                                .build())
+//                        return cookies
+//                    }
+//                }).build()
+//
+//        val request = Request.Builder()
+//                .url(BaseURL + API_S3_KEY)
+//                .get()
+//                .addHeader("cache-control", "no-cache")
+//                .build()
+//
+//        client.newCall(request).enqueue(object: Callback{
+//            override fun onResponse(call: Call?, response: Response?) {
+//                if (response != null) {
+//                    val jsonData = response.body()?.string()
+//                    val json = JSONObject(jsonData)
+//                    Log.d("last info", json.toString())
+//                    val keys = json.getJSONObject("key")
+//                    val accessKey = keys.getString("s3accesskey")
+//                    val secretKey = keys.getString("s3secretkey")
+//                    completion(true, accessKey, secretKey, null)
+//                } else {
+//                    completion(false, null, null, call?.hashCode())
+//                }
+//
+//            }
+//
+//            override fun onFailure(call: Call?, e: IOException?) {
+//                completion(false, null, null, e?.hashCode())
+//            }
+//        })
+//    }
 
     // Get Cookie Data
-    fun getCookieData(email: String,
-                      password: String,
-                      completion: (Boolean, String?, String?, Int?) -> Unit) {
-
-        val client = OkHttpClient().newBuilder()
-                .cookieJar(object: CookieJar{
-                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-                    }
-                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
-                        val cookies = ArrayList<Cookie>(1)
-                        cookies.add(Cookie.Builder()
-                                .domain("archive.org")
-                                .path("/")
-                                .name("test-cookie")
-                                .value("1")
-                                .build())
-                        return cookies
-                    }
-                }).build()
-
-        val mediaType = MediaType.parse("application/x-www-form-urlencoded")
-        val body = RequestBody.create(mediaType, "username=$email&password=$password&action=login")
-        val request = Request.Builder()
-                .url(BaseURL + WEB_LOGIN)
-                .post(body)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
-                .addHeader("cache-control", "no-cache")
-                .build()
-
-        client.newCall(request).enqueue(object: Callback{
-            override fun onResponse(call: Call?, response: Response?) {
-                if (response?.priorResponse() != null) {
-                    val cookies = response.priorResponse()?.headers("Set-Cookie")
-                    val loggedInSig = cookies!![1].split(";")[0].split("=")[1]
-                    val loggedInUser = email
-                    completion(true, loggedInSig, loggedInUser, null)
-                } else {
-                    completion(false, null, null, call?.hashCode())
-                }
-
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                completion(false, null, null, e?.hashCode())
-            }
-        })
-    }
+//    fun getCookieData(email: String,
+//                      password: String,
+//                      completion: (Boolean, String?, String?, Int?) -> Unit) {
+//
+//        val client = OkHttpClient().newBuilder()
+//                .cookieJar(object: CookieJar{
+//                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
+//                    }
+//                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
+//                        val cookies = ArrayList<Cookie>(1)
+//                        cookies.add(Cookie.Builder()
+//                                .domain("archive.org")
+//                                .path("/")
+//                                .name("test-cookie")
+//                                .value("1")
+//                                .build())
+//                        return cookies
+//                    }
+//                }).build()
+//
+//        val mediaType = MediaType.parse("application/x-www-form-urlencoded")
+//        val body = RequestBody.create(mediaType, "username=$email&password=$password&action=login")
+//        val request = Request.Builder()
+//                .url(BaseURL + WEB_LOGIN)
+//                .post(body)
+//                .addHeader("content-type", "application/x-www-form-urlencoded")
+//                .addHeader("cache-control", "no-cache")
+//                .build()
+//
+//        client.newCall(request).enqueue(object: Callback{
+//            override fun onResponse(call: Call?, response: Response?) {
+//                if (response?.priorResponse() != null) {
+//                    val cookies = response.priorResponse()?.headers("Set-Cookie")
+//                    val loggedInSig = cookies!![1].split(";")[0].split("=")[1]
+//                    val loggedInUser = email
+//                    Log.d("cookies info", loggedInSig)
+//                    Log.d("cookies info",loggedInUser)
+//                    completion(true, loggedInSig, loggedInUser, null)
+//                } else {
+//                    completion(false, null, null, call?.hashCode())
+//                }
+//
+//            }
+//
+//            override fun onFailure(call: Call?, e: IOException?) {
+//                completion(false, null, null, e?.hashCode())
+//            }
+//        })
+//    }
 
     // Check if a URL is Blocked
     fun isURLBlocked(url: String,

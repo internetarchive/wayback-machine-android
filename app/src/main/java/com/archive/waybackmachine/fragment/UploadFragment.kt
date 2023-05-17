@@ -1,11 +1,9 @@
 package com.archive.waybackmachine.fragment
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import androidx.core.content.ContextCompat
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -32,6 +30,7 @@ import com.esafirm.imagepicker.features.ReturnMode
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource
 import kotlinx.android.synthetic.main.fragment_upload.*
 import kotlinx.android.synthetic.main.fragment_upload.view.*
+import java.util.Locale
 
 class UploadFragment : Fragment(), View.OnClickListener {
     private var mainActivity: MainActivity? = null
@@ -55,7 +54,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
+        mContext = context
         if (context is MainActivity) {
             mainActivity = context
 
@@ -117,13 +116,14 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
-            val images = ImagePicker.getImages(data)
+            //val images = ImagePicker.getImages(data)
             val image = ImagePicker.getFirstImageOrNull(data)
             val resourceURI = Uri.parse(image.path)
             resourcePath = image.path
 
             if (resourcePath != null) {
-                fileExt = resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).toLowerCase()
+                fileExt = resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).toLowerCase(
+                    Locale.getDefault())
                 videoView.releasePlayer()
 
                 if (fileExt == ".mp4" || fileExt == ".3gp" || fileExt == ".mpg") {
@@ -160,20 +160,25 @@ class UploadFragment : Fragment(), View.OnClickListener {
         val startTime = System.currentTimeMillis()
 
         mainActivity?.showProgressBar()
+        val originalMap: Map<String, String?> = mapOf(
+            "identifier" to identifier,
+            "title" to title,
+            "description" to description,
+            "tags" to tags,
+            "path" to resourcePath!!,
+            "filename" to filename,
+            "s3accesskey" to s3accesskey,
+            "s3secretkey" to s3secretkey,
+            "mediatype" to mediaType!!
+        )
 
-        APIManager.getInstance(mainActivity).uploadFile(
-            mapOf(
-                "identifier" to identifier,
-                "title" to title,
-                "description" to description,
-                "tags" to tags,
-                "path" to resourcePath!!,
-                "filename" to filename,
-                "s3accesskey" to s3accesskey,
-                "s3secretkey" to s3secretkey,
-                "mediatype" to mediaType!!
-            ) as Map<String, String>
-        ) { success, uploaded, url, err ->
+        val filteredMap: MutableMap<String, String> = mutableMapOf()
+        for ((key, value) in originalMap) {
+            if (value != null) {
+                filteredMap[key] = value
+            }
+        }
+        APIManager.getInstance(mainActivity).uploadFile(filteredMap) { success, uploaded, _, err ->
             mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
 
@@ -197,11 +202,9 @@ class UploadFragment : Fragment(), View.OnClickListener {
                         }
 
                         override fun updateDrawState(ds: TextPaint) {
-                            if (ds != null) {
-                                super.updateDrawState(ds)
-                            }
-                            ds?.isUnderlineText = false
-                            ds?.color = ContextCompat.getColor(mContext, R.color.fcBlue)
+                            super.updateDrawState(ds)
+                            ds.isUnderlineText = false
+                            ds.color = ContextCompat.getColor(mContext, R.color.fcBlue)
                         }
                     }
                     spannable.setSpan(clickableSpan, iStart, iEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -254,7 +257,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
         val minutes = totalMinutes % minutes_in_an_hour
         val hours = totalMinutes / minutes_in_an_hour
 
-        var ret: String = ""
+        var ret = ""
         if (hours > 0) {
             ret += hours.toString() + "hrs"
         }
