@@ -1,10 +1,9 @@
 package com.archive.waybackmachine.helper
 
 import android.os.Build
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
 
 
 class AndroidLifecycleUtils {
@@ -24,14 +23,14 @@ class AndroidLifecycleUtils {
                 return true
             }
 
-            if (context !is Activity) {
+            if (context !is AppCompatActivity) {
                 return true
             }
 
-            return canLoadImage(context as Activity?)
+            return canLoadImage(context as AppCompatActivity?)
         }
 
-        fun canLoadImage(activity: Activity?): Boolean {
+        fun canLoadImage(activity: AppCompatActivity?): Boolean {
             if (activity == null) {
                 return true
             }

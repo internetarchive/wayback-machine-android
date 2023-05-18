@@ -2,9 +2,10 @@ package com.archive.waybackmachine.fragment
 
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -53,7 +54,7 @@ class AboutFramgment : Fragment() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = false
-                ds.color = resources.getColor(R.color.fcBlue)
+                ds.color = ContextCompat.getColor(mContext, R.color.fcBlue)
             }
         }
 

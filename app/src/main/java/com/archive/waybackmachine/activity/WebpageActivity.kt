@@ -2,7 +2,7 @@ package com.archive.waybackmachine.activity
 
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
@@ -41,7 +41,7 @@ class WebpageActivity : AppCompatActivity(), View.OnClickListener {
         val header = mutableMapOf<String, String>()
         header["User-Agent"] = "Wayback_Machine_Android/" + AppManager.getInstance(this).getVersionName()
         webView.webViewClient = webViewClient
-        webView.loadUrl(url, header)
+        webView.loadUrl(url?: "", header)
         containerIndicator.visibility = View.VISIBLE
     }
 
@@ -57,7 +57,7 @@ class WebpageActivity : AppCompatActivity(), View.OnClickListener {
     private fun onShare() {
         val dialogShare = ShareIntentDialog.Builder(this)
                 .setDialogTitle("Share with your friends")
-                .setShareLink(webView.url)
+                .setShareLink(webView.url?: "")
                 .build()
 
         dialogShare.show()

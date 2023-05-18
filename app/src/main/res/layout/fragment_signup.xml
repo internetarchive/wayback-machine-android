@@ -32,19 +32,20 @@
                 android:layout_marginTop="50dp" />
 
             <EditText
+                android:id="@+id/ctxtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="@string/username"
-                android:padding="10dp"
-                android:ems="10"
-                android:background="@drawable/edit_background"
-                android:id="@+id/ctxtUsername"
-                android:textSize="@dimen/fs_18"
-                android:layout_marginBottom="0dp"
                 android:layout_marginLeft="0dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginRight="0dp"
-                android:layout_marginTop="40dp" />
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/edit_background"
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:textSize="@dimen/fs_18" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -62,34 +63,36 @@
                 android:layout_marginTop="10dp" />
 
             <EditText
+                android:id="@+id/ctxtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/pwd"
-                android:padding="10dp"
-                android:ems="10"
-                android:background="@drawable/edit_background"
-                android:id="@+id/ctxtPassword"
-                android:textSize="@dimen/fs_18"
-                android:layout_marginBottom="0dp"
                 android:layout_marginLeft="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="0dp"
-                android:layout_marginTop="10dp" />
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/edit_background"
+                android:ems="10"
+                android:hint="@string/pwd"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:textSize="@dimen/fs_18" />
 
             <EditText
+                android:id="@+id/ctxtConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/confirm_pwd"
-                android:padding="10dp"
-                android:ems="10"
-                android:background="@drawable/edit_background"
-                android:id="@+id/ctxtConfirmPassword"
-                android:textSize="@dimen/fs_18"
-                android:layout_marginBottom="0dp"
                 android:layout_marginLeft="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="0dp"
-                android:layout_marginTop="10dp" />
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/edit_background"
+                android:ems="10"
+                android:hint="@string/confirm_pwd"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:textSize="@dimen/fs_18" />
 
             <Button
                 android:layout_width="fill_parent"

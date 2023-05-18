@@ -1,13 +1,12 @@
 package com.archive.waybackmachine.fragment
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.media.Image
+import androidx.core.content.ContextCompat
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -31,12 +30,15 @@ import com.esafirm.imagepicker.features.ReturnMode
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource
 import kotlinx.android.synthetic.main.fragment_upload.*
 import kotlinx.android.synthetic.main.fragment_upload.view.*
+import java.util.Locale
 
 class UploadFragment : Fragment(), View.OnClickListener {
     private var mainActivity: MainActivity? = null
     private var resourcePath: String? = null
     private var fileExt: String? = null
     private var mediaType: String? = null
+    private lateinit var mContext: Context
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,7 +54,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
+        mContext = context
         if (context is MainActivity) {
             mainActivity = context
 
@@ -114,13 +116,14 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
-            val images = ImagePicker.getImages(data)
+            //val images = ImagePicker.getImages(data)
             val image = ImagePicker.getFirstImageOrNull(data)
             val resourceURI = Uri.parse(image.path)
             resourcePath = image.path
 
             if (resourcePath != null) {
-                fileExt = resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).toLowerCase()
+                fileExt = resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).toLowerCase(
+                    Locale.getDefault())
                 videoView.releasePlayer()
 
                 if (fileExt == ".mp4" || fileExt == ".3gp" || fileExt == ".mpg") {
@@ -157,19 +160,26 @@ class UploadFragment : Fragment(), View.OnClickListener {
         val startTime = System.currentTimeMillis()
 
         mainActivity?.showProgressBar()
+        val originalMap: Map<String, String?> = mapOf(
+            "identifier" to identifier,
+            "title" to title,
+            "description" to description,
+            "tags" to tags,
+            "path" to resourcePath!!,
+            "filename" to filename,
+            "s3accesskey" to s3accesskey,
+            "s3secretkey" to s3secretkey,
+            "mediatype" to mediaType!!
+        )
 
-        APIManager.getInstance(mainActivity).uploadFile(mapOf(
-                "identifier" to identifier,
-                "title" to title,
-                "description" to description,
-                "tags" to tags,
-                "path" to resourcePath!!,
-                "filename" to filename,
-                "s3accesskey" to s3accesskey,
-                "s3secretkey" to s3secretkey,
-                "mediatype" to mediaType!!
-        ), { success, uploaded, url, err ->
-            mainActivity?.runOnUiThread({
+        val filteredMap: MutableMap<String, String> = mutableMapOf()
+        for ((key, value) in originalMap) {
+            if (value != null) {
+                filteredMap[key] = value
+            }
+        }
+        APIManager.getInstance(mainActivity).uploadFile(filteredMap) { success, uploaded, _, err ->
+            mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
 
                 val endTime = System.currentTimeMillis()
@@ -178,21 +188,23 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 if (success) {
                     val txtView = TextView(context)
                     txtView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                    val spannable = SpannableString("Uploaded $uploaded \n In $duration \n Available here " +
-                            "https://archive.org/details/$identifier")
+                    val spannable = SpannableString(
+                        "Uploaded $uploaded \n In $duration \n Available here " +
+                                "https://archive.org/details/$identifier"
+                    )
                     val iStart = spannable.toString().indexOf("https://")
                     val iEnd = spannable.toString().length
-                    val clickableSpan = object: ClickableSpan() {
-                        override fun onClick(view: View?) {
+                    val clickableSpan = object : ClickableSpan() {
+                        override fun onClick(widget: View) {
                             val intent = Intent(mainActivity, WebpageActivity::class.java)
                             intent.putExtra("URL", spannable.toString().substring(iStart))
                             startActivity(intent)
                         }
 
-                        override fun updateDrawState(ds: TextPaint?) {
+                        override fun updateDrawState(ds: TextPaint) {
                             super.updateDrawState(ds)
-                            ds?.isUnderlineText = false
-                            ds?.color = resources.getColor(R.color.fcBlue)
+                            ds.isUnderlineText = false
+                            ds.color = ContextCompat.getColor(mContext, R.color.fcBlue)
                         }
                     }
                     spannable.setSpan(clickableSpan, iStart, iEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -200,19 +212,19 @@ class UploadFragment : Fragment(), View.OnClickListener {
                     txtView.movementMethod = LinkMovementMethod.getInstance()
 
                     SweetAlertDialog(mainActivity, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Successfully Uploaded")
-                            .setCustomView(txtView)
-                            .setConfirmText("OK")
-                            .show()
+                        .setTitleText("Successfully Uploaded")
+                        .setCustomView(txtView)
+                        .setConfirmText("OK")
+                        .show()
                 } else {
                     SweetAlertDialog(mainActivity, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Uploading failed")
-                            .setContentText(err)
-                            .setConfirmText("OK")
-                            .show()
+                        .setTitleText("Uploading failed")
+                        .setContentText(err)
+                        .setConfirmText("OK")
+                        .show()
                 }
-            })
-        })
+            }
+        }
     }
 
     private fun validateFields() : Boolean {
@@ -245,7 +257,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
         val minutes = totalMinutes % minutes_in_an_hour
         val hours = totalMinutes / minutes_in_an_hour
 
-        var ret: String = ""
+        var ret = ""
         if (hours > 0) {
             ret += hours.toString() + "hrs"
         }

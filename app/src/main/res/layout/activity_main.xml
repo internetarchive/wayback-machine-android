@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,43 +15,42 @@
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white"
             style="@style/AVLoadingIndicatorView">
         </FrameLayout>
 
-        <android.support.design.widget.BottomNavigationView
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:id="@+id/navView"
-            app:itemIconTint="@drawable/tab_indicator"
-            app:itemTextColor="@drawable/tab_indicator"
-            app:menu="@menu/bottom_tab_items"
             android:background="@color/white"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true">
-        </android.support.design.widget.BottomNavigationView>
+            android:layout_centerHorizontal="true"
+            app:itemIconTint="@drawable/tab_indicator"
+            app:itemTextColor="@drawable/tab_indicator"
+            app:menu="@menu/bottom_tab_items"/>
 
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/containerIndicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/indicatorContainerColor"
-        android:id="@+id/containerIndicator"
         android:visibility="invisible">
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/indicator_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AVLoadingIndicatorView"
+            android:layout_gravity="center"
             android:visibility="visible"
             app:indicatorName="BallSpinFadeLoaderIndicator"
             app:indicatorColor="@color/white"
-            android:layout_gravity="center" />
+            style="@style/AVLoadingIndicatorView" />
+
     </FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
