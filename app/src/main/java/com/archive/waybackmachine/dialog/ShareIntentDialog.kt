@@ -33,7 +33,7 @@ class ShareIntentDialog : Dialog {
         val adapter = ShareIntentListAdapter(context, this, this.shareLink)
 
         listShareIntents.adapter = adapter
-        listShareIntents!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        listShareIntents!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             itemPosition = position
             adapter.setCurrentPosition(position)
             adapter.notifyDataSetChanged()
