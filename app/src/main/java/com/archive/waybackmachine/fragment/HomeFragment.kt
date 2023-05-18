@@ -92,16 +92,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(context).checkPlaybackAvailability(url, "", {success, waybackURL ->
-            mainActivity?.runOnUiThread({
+        APIManager.getInstance(context).checkPlaybackAvailability(url, "") { success, waybackURL ->
+            mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
                 if (!success) {
-                    AppManager.getInstance(context).displayToast("Cannot connect to server. Please try again.")
+                    AppManager.getInstance(context)
+                        .displayToast("Cannot connect to server. Please try again.")
                 } else {
                     openWebPage(waybackURL!!)
                 }
-            })
-        })
+            }
+        }
 
     }
 
@@ -115,16 +116,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(context).checkPlaybackAvailability(url, "00000000000000", {success, waybackURL ->
-            mainActivity?.runOnUiThread({
+        APIManager.getInstance(context).checkPlaybackAvailability(url, "00000000000000") { success, waybackURL ->
+            mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
                 if (!success) {
-                    AppManager.getInstance(context).displayToast("Cannot connect to server. Please try again.")
+                    AppManager.getInstance(context)
+                        .displayToast("Cannot connect to server. Please try again.")
                 } else {
                     openWebPage(waybackURL!!)
                 }
-            })
-        })
+            }
+        }
     }
 
     private fun onOverview() {
@@ -137,16 +139,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         mainActivity?.showProgressBar()
 
-        APIManager.getInstance(context).checkPlaybackAvailability(url, "00000000000000", {success, waybackURL ->
-            mainActivity?.runOnUiThread({
+        APIManager.getInstance(context).checkPlaybackAvailability(url, "00000000000000") { success, waybackURL ->
+            mainActivity?.runOnUiThread {
                 mainActivity?.hideProgressBar()
                 if (!success) {
-                    AppManager.getInstance(context).displayToast("Cannot connect to server. Please try again.")
+                    AppManager.getInstance(context)
+                        .displayToast("Cannot connect to server. Please try again.")
                 } else {
                     openWebPage(waybackURL!!)
                 }
-            })
-        })
+            }
+        }
     }
 
     private fun openWebPage(url: String) {
@@ -178,9 +181,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
     companion object {
         @JvmStatic
         fun newInstance() =
-                HomeFragment().apply {
-                    arguments = Bundle().apply {
-                    }
+            HomeFragment().apply {
+                arguments = Bundle().apply {
                 }
+            }
     }
 }
