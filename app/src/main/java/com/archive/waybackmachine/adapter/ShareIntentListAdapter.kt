@@ -15,6 +15,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.archive.waybackmachine.R
 import com.archive.waybackmachine.dialog.ShareIntentDialog
+import androidx.core.content.ContextCompat
+
 
 class ShareIntentListAdapter(private val context: Context, private val dialog: ShareIntentDialog, private val shareLink: String?) : BaseAdapter() {
     private val listResolve: MutableList<ResolveInfo>?
@@ -29,7 +31,7 @@ class ShareIntentListAdapter(private val context: Context, private val dialog: S
         sendIntent.putExtra(Intent.EXTRA_TEXT, shareLink)
         listResolve = pm.queryIntentActivities(sendIntent, 0)
 
-        for (i in listResolve!!.indices) {
+        for (i in listResolve.indices) {
             if (listResolve[i].loadLabel(pm).toString() == context.resources.getString(R.string.app_name)) {
                 listResolve.removeAt(i)
             }
@@ -89,9 +91,9 @@ class ShareIntentListAdapter(private val context: Context, private val dialog: S
                 activityInfo.applicationInfo.packageName, activityInfo.name)
 
         if (position == currentPosition) {
-            convertView!!.setBackgroundColor(context.resources.getColor(R.color.shareContentColorYellow))
+            convertView!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorYellow))
         } else {
-            convertView!!.setBackgroundColor(context.resources.getColor(R.color.shareContentColorGreen))
+            convertView!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorGreen))
         }
 
         return convertView
