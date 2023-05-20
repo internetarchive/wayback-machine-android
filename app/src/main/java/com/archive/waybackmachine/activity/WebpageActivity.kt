@@ -55,12 +55,16 @@ class WebpageActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onShare() {
-        val dialogShare = ShareIntentDialog.Builder(this)
-                .setDialogTitle("Share with your friends")
-                .setShareLink(webView.url?: "")
-                .build()
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, webView.url ?: "")
 
-        dialogShare.show()
+        val chooserIntent = Intent.createChooser(shareIntent, "Share with your friends")
+        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        if (chooserIntent.resolveActivity(packageManager) != null) {
+            startActivity(chooserIntent)
+        }
     }
 
     override fun onClick(v: View?) {
