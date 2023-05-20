@@ -5,6 +5,9 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.core.content.ContextCompat
 import android.net.Uri
+import android.Manifest
+import androidx.core.app.ActivityCompat
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.SpannableString
@@ -37,6 +40,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
     private var resourcePath: String? = null
     private var fileExt: String? = null
     private var mediaType: String? = null
+    private val PERMISSION_REQUEST_CODE = 1
     private lateinit var mContext: Context
 
 
@@ -55,21 +59,48 @@ class UploadFragment : Fragment(), View.OnClickListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
+        // Check if the permission is granted
         if (context is MainActivity) {
             mainActivity = context
 
             val userInfo = AppManager.getInstance(mainActivity).userInfo
             if (userInfo == null) {
                 SweetAlertDialog(mainActivity, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Login is required")
-                        .setContentText("You need to login to upload photo or video")
-                        .setConfirmText("OK")
-                        .show()
+                    .setTitleText("Login is required")
+                    .setContentText("You need to login to upload photo or video")
+                    .setConfirmText("OK")
+                    .show()
 
                 mainActivity?.selectMenuItem(3)
+            } else {
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        PERMISSION_REQUEST_CODE
+                    )
+                }
+            }
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted, proceed with your logic
+                } else {
+                    // Permission is denied, handle the situation or show an explanation to the user
+                    // You can display a dialog or a toast message to inform the user
+                    SweetAlertDialog(mainActivity, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Permission Denied")
+                        .setContentText("You need to grant the permission to access external storage.")
+                        .show()
+                }
             }
         }
     }
+
 
     override fun onClick(v: View?) {
         if (v == null) return

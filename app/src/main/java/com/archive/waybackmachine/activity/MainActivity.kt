@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         selectFragment(selectedMenuItem)
 
-        PermissionManager.getInstance(this).requestPermissions(this, intArrayOf(0), 1)
+        //PermissionManager.getInstance(this).requestPermissions(this, intArrayOf(0), 1)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
