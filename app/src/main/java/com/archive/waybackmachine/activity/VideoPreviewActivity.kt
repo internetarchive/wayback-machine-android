@@ -1,9 +1,9 @@
-package com.archive.waybackmachine.activity
+package com.internetarchive.waybackmachine.activity
 
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.archive.waybackmachine.R
+import com.internetarchive.waybackmachine.R
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource
 import kotlinx.android.synthetic.main.activity_video_preview.*
 

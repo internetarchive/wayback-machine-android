@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.helper
+package com.internetarchive.waybackmachine.helper
 
 import android.annotation.SuppressLint
 import android.util.Log

@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.activity
+package com.internetarchive.waybackmachine.activity
 
 import android.content.Context
 import android.net.Uri
@@ -8,8 +8,8 @@ import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.helper.AndroidLifecycleUtils
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.helper.AndroidLifecycleUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.chrisbanes.photoview.PhotoView

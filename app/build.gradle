@@ -7,10 +7,10 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 31
     defaultConfig {
-        applicationId "com.archive.waybackmachine"
+        applicationId "com.internetarchive.waybackmachine"
         minSdkVersion 17
         targetSdkVersion 31
-        versionCode 17
+        versionCode 21
         versionName "1.5.5"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }

@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.adapter
+package com.internetarchive.waybackmachine.adapter
 
 import android.content.ComponentName
 import android.content.Context
@@ -13,8 +13,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.dialog.ShareIntentDialog
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.dialog.ShareIntentDialog
 import androidx.core.content.ContextCompat
 
 
