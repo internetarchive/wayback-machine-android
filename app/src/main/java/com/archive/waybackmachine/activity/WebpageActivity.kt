@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.activity
+package com.internetarchive.waybackmachine.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.dialog.ShareIntentDialog
-import com.archive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.dialog.ShareIntentDialog
+import com.internetarchive.waybackmachine.global.AppManager
 import kotlinx.android.synthetic.main.activity_webpage.*
 
 class WebpageActivity : AppCompatActivity(), View.OnClickListener {

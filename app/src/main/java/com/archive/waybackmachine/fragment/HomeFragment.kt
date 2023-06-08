@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.fragment
+package com.internetarchive.waybackmachine.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -11,11 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.activity.MainActivity
-import com.archive.waybackmachine.activity.WebpageActivity
-import com.archive.waybackmachine.global.APIManager
-import com.archive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.activity.MainActivity
+import com.internetarchive.waybackmachine.activity.WebpageActivity
+import com.internetarchive.waybackmachine.global.APIManager
+import com.internetarchive.waybackmachine.global.AppManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 

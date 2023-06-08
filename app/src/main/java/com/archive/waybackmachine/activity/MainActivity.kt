@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.activity
+package com.internetarchive.waybackmachine.activity
 
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -6,11 +6,11 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.fragment.*
-import com.archive.waybackmachine.global.AppManager
-import com.archive.waybackmachine.global.PermissionManager
-import com.archive.waybackmachine.helper.BottomNavigationViewHelper
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.fragment.*
+import com.internetarchive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.global.PermissionManager
+import com.internetarchive.waybackmachine.helper.BottomNavigationViewHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.global
+package com.internetarchive.waybackmachine.global
 
 
 import android.Manifest

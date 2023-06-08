@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.global
+package com.internetarchive.waybackmachine.global
 
 open class SingletonHolder<out T, in A>(creator: (A?) -> T) {
     private var creator: ((A?) -> T)? = creator

@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.fragment
+package com.internetarchive.waybackmachine.fragment
 
 import android.content.Context
 import android.net.Uri
@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.activity.MainActivity
-import com.archive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.activity.MainActivity
+import com.internetarchive.waybackmachine.global.AppManager
 import kotlinx.android.synthetic.main.fragment_account.view.*
 
 class AccountFragment : Fragment(), View.OnClickListener {

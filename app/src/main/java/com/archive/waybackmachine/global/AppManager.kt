@@ -1,18 +1,18 @@
-package com.archive.waybackmachine.global
+package com.internetarchive.waybackmachine.global
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
-import com.archive.waybackmachine.model.UserModel
+import com.internetarchive.waybackmachine.model.UserModel
 
-private const val PreferencesKey = "com.archive.waybackmachine"
-private const val UsernameKey = "com.archive.waybackmachine.username"
-private const val EmailKey = "com.archive.waybackmachine.email"
-private const val LoggedInSigKey = "com.archive.waybackmachine.loggedInSig"
-private const val LoggedInUserKey = "com.archive.waybackmachine.loggedInUser"
-private const val PasswordKey = "com.archive.waybackmachine.password"
-private const val S3AccessKey = "com.archive.waybackmachine.s3AccessKey"
-private const val S3SecretKey = "com.archive.waybackmachine.s3SecretKey"
+private const val PreferencesKey = "com.internetarchive.waybackmachine"
+private const val UsernameKey = "com.internetarchive.waybackmachine.username"
+private const val EmailKey = "com.internetarchive.waybackmachine.email"
+private const val LoggedInSigKey = "com.internetarchive.waybackmachine.loggedInSig"
+private const val LoggedInUserKey = "com.internetarchive.waybackmachine.loggedInUser"
+private const val PasswordKey = "com.internetarchive.waybackmachine.password"
+private const val S3AccessKey = "com.internetarchive.waybackmachine.s3AccessKey"
+private const val S3SecretKey = "com.internetarchive.waybackmachine.s3SecretKey"
 
 class AppManager private constructor(context: Context?) {
     companion object : SingletonHolder<AppManager, Context?>(::AppManager)

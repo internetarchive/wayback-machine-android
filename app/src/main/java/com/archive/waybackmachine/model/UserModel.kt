@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.model
+package com.internetarchive.waybackmachine.model
 
 import java.io.Serializable
 

@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.fragment
+package com.internetarchive.waybackmachine.fragment
 
 
 import android.content.Context
@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.activity.MainActivity
-import com.archive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.activity.MainActivity
+import com.internetarchive.waybackmachine.global.AppManager
 import kotlinx.android.synthetic.main.fragment_signin.*
 import android.widget.TextView
-import com.archive.waybackmachine.global.APIManager
+import com.internetarchive.waybackmachine.global.APIManager
 import kotlinx.android.synthetic.main.fragment_signup.*
 import kotlinx.android.synthetic.main.fragment_signup.view.*
 

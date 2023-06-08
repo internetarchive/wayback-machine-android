@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.fragment
+package com.internetarchive.waybackmachine.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
-import com.archive.waybackmachine.R
+import com.internetarchive.waybackmachine.R
 import kotlinx.android.synthetic.main.fragment_about.*
 import kotlinx.android.synthetic.main.fragment_about.view.*
 

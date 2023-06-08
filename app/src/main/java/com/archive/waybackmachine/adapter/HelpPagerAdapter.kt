@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.adapter
+package com.internetarchive.waybackmachine.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.archive.waybackmachine.R
+import com.internetarchive.waybackmachine.R
 
 class HelpPagerAdapter : PagerAdapter() {
 

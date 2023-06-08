@@ -1,8 +1,8 @@
-package com.archive.waybackmachine.activity
+package com.internetarchive.waybackmachine.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.archive.waybackmachine.R
+import com.internetarchive.waybackmachine.R
 
 class SavepageActivity : AppCompatActivity() {
 

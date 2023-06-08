@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.fragment
+package com.internetarchive.waybackmachine.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -21,13 +21,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import cn.pedant.SweetAlert.SweetAlertDialog
 
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.activity.MainActivity
-import com.archive.waybackmachine.activity.PhotoPreviewActivity
-import com.archive.waybackmachine.activity.VideoPreviewActivity
-import com.archive.waybackmachine.activity.WebpageActivity
-import com.archive.waybackmachine.global.APIManager
-import com.archive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.activity.MainActivity
+import com.internetarchive.waybackmachine.activity.PhotoPreviewActivity
+import com.internetarchive.waybackmachine.activity.VideoPreviewActivity
+import com.internetarchive.waybackmachine.activity.WebpageActivity
+import com.internetarchive.waybackmachine.global.APIManager
+import com.internetarchive.waybackmachine.global.AppManager
 import com.esafirm.imagepicker.features.ImagePicker
 import com.esafirm.imagepicker.features.ReturnMode
 import com.jarvanmo.exoplayerview.media.SimpleMediaSource

@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.dialog
+package com.internetarchive.waybackmachine.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -9,8 +9,8 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
-import com.archive.waybackmachine.R
-import com.archive.waybackmachine.adapter.ShareIntentListAdapter
+import com.internetarchive.waybackmachine.R
+import com.internetarchive.waybackmachine.adapter.ShareIntentListAdapter
 import kotlinx.android.synthetic.main.dialog_share.*
 
 class ShareIntentDialog : Dialog {

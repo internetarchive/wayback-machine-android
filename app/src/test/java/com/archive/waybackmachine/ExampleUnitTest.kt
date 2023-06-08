@@ -1,4 +1,4 @@
-package com.archive.waybackmachine
+package com.internetarchive.waybackmachine
 
 import org.junit.Test
 

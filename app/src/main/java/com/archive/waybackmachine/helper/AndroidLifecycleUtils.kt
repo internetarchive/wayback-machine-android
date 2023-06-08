@@ -1,4 +1,4 @@
-package com.archive.waybackmachine.helper
+package com.internetarchive.waybackmachine.helper
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
