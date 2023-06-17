@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Typeface
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,18 +13,16 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.internetarchive.waybackmachine.R
-import com.internetarchive.waybackmachine.dialog.ShareIntentDialog
 import androidx.core.content.ContextCompat
 
 
-class ShareIntentListAdapter(private val context: Context, private val dialog: ShareIntentDialog, private val shareLink: String?) : BaseAdapter() {
+class ShareIntentListAdapter(private val context: Context, private val shareLink: String?) : BaseAdapter() {
     private val listResolve: MutableList<ResolveInfo>?
-    private val pm: PackageManager
+    private val pm: PackageManager = context.packageManager
     private var typeface: Typeface? = null
     private var currentPosition = -1
 
     init {
-        pm = context.packageManager
         val sendIntent = Intent(Intent.ACTION_SEND)
         sendIntent.type = "text/plain"
         sendIntent.putExtra(Intent.EXTRA_TEXT, shareLink)
@@ -39,9 +36,9 @@ class ShareIntentListAdapter(private val context: Context, private val dialog: S
 
     }
 
-    fun setTypeface(tf: Typeface) {
-        typeface = tf
-    }
+//    fun setTypeface(tf: Typeface) {
+//        typeface = tf
+//    }
 
     override fun getCount(): Int {
         return listResolve?.size ?: 0
@@ -61,7 +58,7 @@ class ShareIntentListAdapter(private val context: Context, private val dialog: S
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
-        var holder: ViewHolder?
+        val holder: ViewHolder?
 
         if (convertView == null) {
             val inflater = context
@@ -86,9 +83,9 @@ class ShareIntentListAdapter(private val context: Context, private val dialog: S
         val icon = info.loadIcon(pm)
         holder.image!!.setImageDrawable(icon)
         holder.text!!.text = info.loadLabel(pm)
-        val activityInfo = info.activityInfo
-        val componentName = ComponentName(
-                activityInfo.applicationInfo.packageName, activityInfo.name)
+//        val activityInfo = info.activityInfo
+//        val componentName = ComponentName(
+//                activityInfo.applicationInfo.packageName, activityInfo.name)
 
         if (position == currentPosition) {
             convertView!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorYellow))

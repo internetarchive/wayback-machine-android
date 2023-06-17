@@ -23,14 +23,15 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             app:itemIconTint="@drawable/tab_indicator"
             app:itemTextColor="@drawable/tab_indicator"
-            app:menu="@menu/bottom_tab_items"/>
+            app:menu="@menu/bottom_tab_items"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </LinearLayout>
 

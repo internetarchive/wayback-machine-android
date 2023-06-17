@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.widget.AdapterView
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.adapter.ShareIntentListAdapter
 import kotlinx.android.synthetic.main.dialog_share.*
@@ -16,7 +13,7 @@ import kotlinx.android.synthetic.main.dialog_share.*
 class ShareIntentDialog : Dialog {
     private var mContext: Context? = null
     private var shareLink: String? = null
-    private var title_text: String? = null
+    private var titleText: String? = null
     private var isShowDialogTitle: Boolean = false
     private var itemPosition: Int = 0
 
@@ -30,7 +27,7 @@ class ShareIntentDialog : Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_share)
 
-        val adapter = ShareIntentListAdapter(context, this, this.shareLink)
+        val adapter = ShareIntentListAdapter(context, this.shareLink)
 
         listShareIntents.adapter = adapter
         listShareIntents!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -39,7 +36,7 @@ class ShareIntentDialog : Dialog {
             adapter.notifyDataSetChanged()
         }
 
-        shareTitle.text = title_text
+        shareTitle.text = titleText
 
         if (!this.isShowDialogTitle) {
             this.shareTitle!!.visibility = View.GONE
@@ -84,7 +81,7 @@ class ShareIntentDialog : Dialog {
     private constructor(builder: Builder) : super(builder.context) {
         this.mContext = builder.context
         if (builder.title != null) {
-            this.title_text = builder.title
+            this.titleText = builder.title
 
         }
         this.isShowDialogTitle = builder.isShowDialogTitle

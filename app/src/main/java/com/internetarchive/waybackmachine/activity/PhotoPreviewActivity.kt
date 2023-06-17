@@ -32,7 +32,7 @@ class PhotoPreviewActivity : AppCompatActivity() {
         return true
     }
 
-    internal class SamplePagerAdapter(context: Context, val photos: List<String>) : PagerAdapter() {
+    internal class SamplePagerAdapter(context: Context, private val photos: List<String>) : PagerAdapter() {
 
         private var mContext: Context
 

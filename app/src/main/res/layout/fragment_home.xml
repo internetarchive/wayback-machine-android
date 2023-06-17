@@ -33,7 +33,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/home_description"
                     android:id="@+id/textView"
-                    android:textSize="@dimen/fs_20"
+                    android:textSize="@dimen/fs_20_sp"
                     android:layout_marginTop="50dp"
                     android:layout_gravity="center_horizontal"
                     android:textStyle="bold"
@@ -64,7 +64,7 @@
                     android:inputType="textUri"
                     android:minHeight="48dp"
                     android:padding="10dp"
-                    android:textSize="@dimen/fs_16" />
+                    android:textSize="@dimen/fs_16_sp" />
 
                 <Button
                     android:layout_width="fill_parent"
@@ -74,7 +74,7 @@
                     android:layout_marginTop="30dp"
                     android:textAllCaps="false"
                     android:background="@drawable/button_background"
-                    android:textSize="@dimen/fs_18"
+                    android:textSize="@dimen/fs_18_sp"
                     android:textColor="@color/fcWhite"
                     android:textStyle="bold" />
 
@@ -86,7 +86,7 @@
                     android:layout_marginTop="15dp"
                     android:textAllCaps="false"
                     android:background="@drawable/button_background"
-                    android:textSize="@dimen/fs_18"
+                    android:textSize="@dimen/fs_18_sp"
                     android:textColor="@color/fcWhite"
                     android:textStyle="bold" />
 
@@ -98,7 +98,7 @@
                     android:layout_marginTop="15dp"
                     android:textAllCaps="false"
                     android:background="@drawable/button_background"
-                    android:textSize="@dimen/fs_18"
+                    android:textSize="@dimen/fs_18_sp"
                     android:textColor="@color/fcWhite"
                     android:textStyle="bold" />
 
@@ -111,7 +111,7 @@
                     android:text="@string/home_btn_overview"
                     android:textAllCaps="false"
                     android:textColor="@color/fcWhite"
-                    android:textSize="@dimen/fs_18"
+                    android:textSize="@dimen/fs_18_sp"
                     android:textStyle="bold"
                     android:visibility="invisible" />
 

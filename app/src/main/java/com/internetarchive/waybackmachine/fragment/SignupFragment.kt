@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.activity.MainActivity
 import com.internetarchive.waybackmachine.global.AppManager
-import kotlinx.android.synthetic.main.fragment_signin.*
-import android.widget.TextView
 import com.internetarchive.waybackmachine.global.APIManager
 import kotlinx.android.synthetic.main.fragment_signup.*
 import kotlinx.android.synthetic.main.fragment_signup.view.*

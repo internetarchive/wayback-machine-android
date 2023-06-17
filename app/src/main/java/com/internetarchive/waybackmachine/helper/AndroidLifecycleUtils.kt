@@ -30,7 +30,7 @@ class AndroidLifecycleUtils {
             return canLoadImage(context as AppCompatActivity?)
         }
 
-        fun canLoadImage(activity: AppCompatActivity?): Boolean {
+        private fun canLoadImage(activity: AppCompatActivity?): Boolean {
             if (activity == null) {
                 return true
             }

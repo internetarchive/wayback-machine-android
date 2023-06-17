@@ -12,5 +12,8 @@
     <dimen name="fs_16">16dp</dimen>
     <dimen name="fs_14">14dp</dimen>
     <dimen name="fs_12">12dp</dimen>
+    <dimen name="fs_20_sp">20sp</dimen>
+    <dimen name="fs_16_sp">16sp</dimen>
+    <dimen name="fs_18_sp">18sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>

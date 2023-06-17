@@ -1,7 +1,6 @@
 package com.internetarchive.waybackmachine.fragment
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,10 +36,12 @@ class AccountFragment : Fragment(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        var userInfo = AppManager.getInstance(mainActivity).userInfo
+        val userInfo = AppManager.getInstance(mainActivity).userInfo
 
         if (userInfo != null) {
-            view?.txtDescription?.text = "You're logged into the Internet Archive as ${userInfo.username}"
+            val username = userInfo.username
+            val description = resources.getString(R.string.logged_in_description, username)
+            view?.txtDescription?.text = description
         }
     }
 

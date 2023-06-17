@@ -8,100 +8,76 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <ScrollView
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/logo"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+
+    <EditText
+        android:id="@+id/txtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView">
+        android:layout_marginTop="30dp"
+        android:background="@drawable/edit_background"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textSize="@dimen/fs_18_sp"
+        android:autofillHints="emailAddress" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="20dp">
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_background"
+        android:ems="10"
+        android:hint="@string/pwd"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textSize="@dimen/fs_18_sp"
+        android:autofillHints="password" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView"
-                android:layout_marginTop="50dp"
-                app:srcCompat="@drawable/logo"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true" />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:id="@+id/btnLogin"
+        android:layout_marginTop="50dp"
+        android:textAllCaps="false"
+        android:background="@drawable/button_background"
+        android:textSize="@dimen/fs_18_sp"
+        android:textColor="@color/fcWhite"
+        android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/txtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
-                android:background="@drawable/edit_background"
-                android:ems="10"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp"
-                android:padding="10dp"
-                android:paddingLeft="4dp"
-                android:textAlignment="center"
-                android:textSize="@dimen/fs_18" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/no_account"
+        android:id="@+id/textView"
+        android:layout_marginTop="30dp"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/fs_16_sp" />
 
-            <EditText
-                android:id="@+id/txtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
-                android:background="@drawable/edit_background"
-                android:ems="10"
-                android:hint="@string/pwd"
-                android:inputType="textPassword"
-                android:minHeight="48dp"
-                android:padding="10dp"
-                android:paddingLeft="4dp"
-                android:textAlignment="center"
-                android:textSize="@dimen/fs_18" />
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login"
-                android:id="@+id/btnLogin"
-                android:layout_marginTop="50dp"
-                android:textAllCaps="false"
-                android:background="@drawable/button_background"
-                android:textSize="@dimen/fs_18"
-                android:textColor="@color/fcWhite"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/no_account"
-                android:id="@+id/textView"
-                android:layout_marginTop="30dp"
-                android:textIsSelectable="false"
-                android:textSize="@dimen/fs_16" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/signup"
-                android:textColor="@color/fcBlue"
-                android:id="@+id/btnSignUp"
-                android:layout_marginTop="10dp"
-                android:textIsSelectable="false"
-                android:textSize="@dimen/fs_18" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/signup"
+        android:textColor="@color/fcBlue"
+        android:id="@+id/btnSignUp"
+        android:layout_marginTop="10dp"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/fs_18_sp" />
 
 </LinearLayout>

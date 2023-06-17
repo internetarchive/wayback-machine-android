@@ -1,29 +1,13 @@
 package com.internetarchive.waybackmachine.global
 
 import android.content.Context
-import android.provider.Settings
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.android.core.Json
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.success
 import org.json.JSONObject
-import java.sql.Array
-import android.webkit.MimeTypeMap
-import com.github.kittinunf.fuel.core.Blob
-import com.github.kittinunf.fuel.core.DataPart
-import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.httpPut
-import okhttp3.*
-import java.io.IOException
-import okhttp3.Cookie
-import okhttp3.HttpUrl
-import okhttp3.CookieJar
-import okhttp3.OkHttpClient
-import okhttp3.RequestBody
 import java.io.File
-import java.io.InputStream
 
 
 class APIManager private constructor(context: Context?) {
@@ -32,12 +16,9 @@ class APIManager private constructor(context: Context?) {
     private val BaseURL = "https://archive.org/"
     private val API_CREATE = "services/xauthn/?op=create"
     private val API_LOGIN = "services/xauthn/?op=login"
-    private val API_INFO = "services/xauthn/?op=info"
     private val API_AVAILABILITY = "wayback/available"
-    private val API_S3_KEY = "account/s3.php?output_json=1"
     private val UploadURL = "https://s3.us.archive.org"
     private val SparkLineURL = "https://web.archive.org/__wb/sparkline"
-    private val WEB_LOGIN = "account/login.php"
     private val API_METADATA = "metadata/"
     private val API_VERSION = 1
     private val ACCESS = "trS8dVjP8dzaE296"
@@ -61,7 +42,7 @@ class APIManager private constructor(context: Context?) {
     private fun SendDataToService(params: List<Pair<String, Any>>,
                                   op: String,
                                   completion: (Boolean, JSONObject?, Int?) -> Unit) {
-        var parameters: MutableList<Pair<String, Any>> = mutableListOf()
+        val parameters: MutableList<Pair<String, Any>> = mutableListOf()
         parameters.addAll(params)
         parameters.add("access" to ACCESS)
         parameters.add("secret" to SECRET)
@@ -80,17 +61,17 @@ class APIManager private constructor(context: Context?) {
 
     }
 
-    private fun SendDataToSparkLine(params: List<Pair<String, Any>>,
-                                    completion: (String?) -> Unit) {
-
-    }
+//    private fun SendDataToSparkLine(params: List<Pair<String, Any>>,
+//                                    completion: (String?) -> Unit) {
+//
+//    }
 
     fun uploadFile(params: Map<String, String>,
                                  completion: (Boolean, String?, String?, String?) -> Unit) {
 
         val authorization = "LOW " + params["s3accesskey"] + ":" + params["s3secretkey"]
         val url = UploadURL + "/" + params["identifier"] + "/" + params["filename"]
-        val file = File(params["path"])
+        val file = File(params["path"]!!)
 
         url.httpPut()
             .body(file.readBytes())
@@ -165,8 +146,8 @@ class APIManager private constructor(context: Context?) {
                     if (login_success) {
                         completion(true, null, data)
                     } else {
-                        val values = data?.getJSONObject("values")
-                        val reason = values?.getString("reason")
+                        val values = data.getJSONObject("values")
+                        val reason = values.getString("reason")
                         completion(false, Errors[reason], null)
                     }
                 } else {
@@ -306,17 +287,17 @@ class APIManager private constructor(context: Context?) {
 //    }
 
     // Check if a URL is Blocked
-    fun isURLBlocked(url: String,
-                     completion: (String?) -> Unit) {
-
-    }
+//    fun isURLBlocked(url: String,
+//                     completion: (String?) -> Unit) {
+//
+//    }
 
     fun checkPlaybackAvailability(url: String, timestamp: String, completion: (Boolean, String?) -> Unit) {
-        var params = mutableListOf(
+        val params = mutableListOf(
                 "url" to url
         )
 
-        if (!timestamp.isEmpty()) {
+        if (timestamp.isNotEmpty()) {
             params.add("timestamp" to timestamp)
         }
 
@@ -331,10 +312,7 @@ class APIManager private constructor(context: Context?) {
                     val status = closest.getString("status")
                     val waybackURL = closest.getString("url")
 
-                    if (archivedSnapshots != null &&
-                            closest != null &&
-                            available != null &&
-                            status == "200") {
+                    if (status == "200") {
                         completion(true, waybackURL)
                     } else {
                         completion(false, null)

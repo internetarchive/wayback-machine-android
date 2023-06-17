@@ -17,7 +17,7 @@
             android:id="@+id/shareTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/fs_20"
+            android:textSize="@dimen/fs_20_sp"
             android:text="@string/share_dlg_title"
             android:textColor="@color/white" />
     </LinearLayout>
@@ -26,7 +26,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp">
+        android:layout_marginStart="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/share_dlg_actions"
             android:id="@+id/textView18"
-            android:textSize="@dimen/fs_16"
+            android:textSize="@dimen/fs_16_sp"
             android:textColor="@color/white" />
     </LinearLayout>
 
@@ -76,7 +76,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
@@ -93,7 +94,7 @@
                 android:id="@+id/btnCancel"
                 android:background="@color/clear"
                 android:textColor="@color/white"
-                android:textSize="@dimen/fs_16"
+                android:textSize="@dimen/fs_16_sp"
                 android:clickable="false" />
         </LinearLayout>
 
@@ -112,7 +113,7 @@
                 android:id="@+id/btnShare"
                 android:background="@color/clear"
                 android:textColor="@color/white"
-                android:textSize="@dimen/fs_16" />
+                android:textSize="@dimen/fs_16_sp" />
 
         </LinearLayout>
 

@@ -8,7 +8,6 @@ import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.internetarchive.waybackmachine.R
-import com.internetarchive.waybackmachine.dialog.ShareIntentDialog
 import com.internetarchive.waybackmachine.global.AppManager
 import kotlinx.android.synthetic.main.activity_webpage.*
 

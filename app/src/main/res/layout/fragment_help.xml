@@ -24,15 +24,12 @@
             android:id="@+id/pageIndicatorView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
             attrs:piv_padding="10dp"
             attrs:piv_radius="4dp"
             attrs:piv_selectedColor="@color/wmMain"
             attrs:piv_unselectedColor="@color/indicatorColorGray"
-            android:layout_gravity="center"
             android:padding="5dp" />
-
 
     </FrameLayout>
 
