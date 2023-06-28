@@ -25,6 +25,6 @@
         android:gravity="left|center_vertical"
         android:scrollHorizontally="true"
         android:textColor="@color/white"
-        android:textSize="@dimen/fs_18" />
+        android:textSize="@dimen/fs_18_sp" />
 
 </LinearLayout>

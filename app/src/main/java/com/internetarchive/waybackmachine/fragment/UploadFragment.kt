@@ -6,7 +6,6 @@ import android.graphics.Color
 import androidx.core.content.ContextCompat
 import android.net.Uri
 import android.Manifest
-import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -280,13 +279,15 @@ class UploadFragment : Fragment(), View.OnClickListener {
     }
 
     private fun formatTime(totalSeconds: Long): String {
-        val minutes_in_an_hour = 60
-        val seconds_in_a_minute = 60
+        val minutesInAnHour = 60
+        val secondsInAMinute = 60
 
-        val seconds = totalSeconds % seconds_in_a_minute
-        val totalMinutes = totalSeconds / seconds_in_a_minute
-        val minutes = totalMinutes % minutes_in_an_hour
-        val hours = totalMinutes / minutes_in_an_hour
+        val seconds = totalSeconds % secondsInAMinute
+        val totalMinutes = totalSeconds / secondsInAMinute
+        val minutes = totalMinutes % minutesInAnHour
+
+        val hours = totalMinutes / minutesInAnHour
+
 
         var ret = ""
         if (hours > 0) {

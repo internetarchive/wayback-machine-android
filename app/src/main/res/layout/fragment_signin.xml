@@ -47,7 +47,7 @@
                 android:padding="10dp"
                 android:paddingLeft="4dp"
                 android:textAlignment="center"
-                android:textSize="@dimen/fs_18" />
+                android:textSize="@dimen/fs_18_sp" />
 
             <EditText
                 android:id="@+id/txtPassword"
@@ -65,7 +65,7 @@
                 android:padding="10dp"
                 android:paddingLeft="4dp"
                 android:textAlignment="center"
-                android:textSize="@dimen/fs_18" />
+                android:textSize="@dimen/fs_18_sp" />
 
             <Button
                 android:layout_width="fill_parent"
@@ -75,7 +75,7 @@
                 android:layout_marginTop="50dp"
                 android:textAllCaps="false"
                 android:background="@drawable/button_background"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:textColor="@color/fcWhite"
                 android:textStyle="bold" />
 
@@ -87,7 +87,7 @@
                 android:id="@+id/textView"
                 android:layout_marginTop="30dp"
                 android:textIsSelectable="false"
-                android:textSize="@dimen/fs_16" />
+                android:textSize="@dimen/fs_16_sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -98,10 +98,9 @@
                 android:id="@+id/btnSignUp"
                 android:layout_marginTop="10dp"
                 android:textIsSelectable="false"
-                android:textSize="@dimen/fs_18" />
+                android:textSize="@dimen/fs_18_sp" />
 
         </LinearLayout>
 
     </ScrollView>
-
 </LinearLayout>

@@ -3,7 +3,6 @@ package com.internetarchive.waybackmachine.fragment
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.SpannableString
@@ -17,7 +16,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import com.internetarchive.waybackmachine.R
-import kotlinx.android.synthetic.main.fragment_about.*
 import kotlinx.android.synthetic.main.fragment_about.view.*
 
 class AboutFramgment : Fragment() {
@@ -62,8 +60,10 @@ class AboutFramgment : Fragment() {
         view.txtSupport.text = ssText
         view.txtSupport.movementMethod = LinkMovementMethod.getInstance()
 
-        view.txtVersion.text = view.txtVersion.text.toString() +
-                activity!!.packageManager.getPackageInfo(activity!!.packageName, 0).versionName
+        val versionName = activity!!.packageManager.getPackageInfo(activity!!.packageName, 0).versionName
+        val versionText = resources.getString(R.string.version_text, view.txtVersion.text.toString(), versionName)
+        view.txtVersion.text = versionText
+
 
         return view
     }

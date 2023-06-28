@@ -28,7 +28,7 @@
         android:id="@+id/txtDescription"
         android:textIsSelectable="false"
         android:textAlignment="center"
-        android:textSize="@dimen/fs_18" />
+        android:textSize="@dimen/fs_18_sp" />
 
     <Button
         android:layout_width="fill_parent"
@@ -41,7 +41,7 @@
         android:layout_marginRight="20dp"
         android:textAllCaps="false"
         android:background="@drawable/button_background"
-        android:textSize="@dimen/fs_18"
+        android:textSize="@dimen/fs_18_sp"
         android:textColor="@color/fcWhite"
         android:textStyle="bold" />
 

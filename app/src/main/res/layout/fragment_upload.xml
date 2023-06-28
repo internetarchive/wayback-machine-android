@@ -28,7 +28,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/title_upload"
                 android:id="@+id/textView2"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:textStyle="bold"
                 android:layout_marginTop="50dp" />
 
@@ -46,7 +46,7 @@
                 android:inputType="text"
                 android:minHeight="48dp"
                 android:padding="10dp"
-                android:textSize="@dimen/fs_16" />
+                android:textSize="@dimen/fs_16_sp" />
 
             <EditText
                 android:id="@+id/txtDescription"
@@ -65,7 +65,7 @@
                 android:minHeight="48dp"
                 android:padding="10dp"
                 android:singleLine="false"
-                android:textSize="@dimen/fs_16" />
+                android:textSize="@dimen/fs_16_sp" />
 
             <EditText
                 android:id="@+id/txtSubject"
@@ -81,7 +81,7 @@
                 android:inputType="text"
                 android:minHeight="48dp"
                 android:padding="10dp"
-                android:textSize="@dimen/fs_16" />
+                android:textSize="@dimen/fs_16_sp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                 android:layout_marginTop="30dp"
                 android:textAllCaps="false"
                 android:background="@drawable/button_background"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:textColor="@color/fcWhite"
                 android:textStyle="bold" />
 
@@ -128,7 +128,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:background="@drawable/button_background"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:textColor="@color/fcWhite"
                 android:textStyle="bold" />
 

@@ -1,7 +1,6 @@
 package com.internetarchive.waybackmachine.activity
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.fragment.*
 import com.internetarchive.waybackmachine.global.AppManager
-import com.internetarchive.waybackmachine.global.PermissionManager
 import com.internetarchive.waybackmachine.helper.BottomNavigationViewHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,7 +26,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         navView.setOnNavigationItemSelectedListener(this)
 
-        var selectedMenuItem: MenuItem
+        val selectedMenuItem: MenuItem
 
         if (savedInstanceState != null) {
             mSelectedMenuItem = savedInstanceState.getInt(SELECTED_MENU_ITEM, 0)
@@ -79,10 +77,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 frag = AboutFramgment.newInstance()
             }
             R.id.menu_account -> {
-                if (AppManager.getInstance(this).userInfo == null) {
-                    frag = SigninFragment.newInstance()
+                frag = if (AppManager.getInstance(this).userInfo == null) {
+                    SigninFragment.newInstance()
                 } else {
-                    frag = AccountFragment.newInstance()
+                    AccountFragment.newInstance()
                 }
             }
             R.id.menu_upload -> {

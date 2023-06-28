@@ -27,7 +27,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/title_signup"
                 android:id="@+id/textView2"
-                android:textSize="@dimen/fs_20"
+                android:textSize="@dimen/fs_20_sp"
                 android:textStyle="bold"
                 android:layout_marginTop="50dp" />
 
@@ -45,7 +45,7 @@
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
                 android:padding="10dp"
-                android:textSize="@dimen/fs_18" />
+                android:textSize="@dimen/fs_18_sp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:ems="10"
                 android:background="@drawable/edit_background"
                 android:id="@+id/ctxtEmail"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
@@ -76,7 +76,7 @@
                 android:inputType="textPassword"
                 android:minHeight="48dp"
                 android:padding="10dp"
-                android:textSize="@dimen/fs_18" />
+                android:textSize="@dimen/fs_18_sp" />
 
             <EditText
                 android:id="@+id/ctxtConfirmPassword"
@@ -92,7 +92,7 @@
                 android:inputType="textPassword"
                 android:minHeight="48dp"
                 android:padding="10dp"
-                android:textSize="@dimen/fs_18" />
+                android:textSize="@dimen/fs_18_sp" />
 
             <Button
                 android:layout_width="fill_parent"
@@ -103,7 +103,7 @@
                 android:textAllCaps="false"
                 android:background="@drawable/button_background"
                 android:padding="2dp"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:textColor="@color/fcWhite"
                 android:textStyle="bold" />
 
@@ -116,7 +116,7 @@
                 android:textAllCaps="false"
                 android:background="@drawable/button_background"
                 android:padding="2dp"
-                android:textSize="@dimen/fs_18"
+                android:textSize="@dimen/fs_18_sp"
                 android:textColor="@color/fcWhite"
                 android:textStyle="bold" />
 
