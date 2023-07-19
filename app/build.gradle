@@ -10,7 +10,7 @@ android {
         applicationId "com.internetarchive.waybackmachine"
         minSdkVersion 17
         targetSdkVersion 31
-        versionCode 21
+        versionCode 22
         versionName "1.5.5"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
