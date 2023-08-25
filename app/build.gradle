@@ -13,6 +13,14 @@ android {
         versionCode 22
         versionName "1.5.5"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        buildConfigField "String", "API_LOGIN", "\"${properties.getProperty("API_LOGIN")}\""
+        buildConfigField "String", "API_CREATE", "\"${properties.getProperty("API_CREATE")}\""
+        buildConfigField "String", "ACCESS", "\"${properties.getProperty("ACCESS")}\""
+        buildConfigField "String", "SECRET", "\"${properties.getProperty("SECRET")}\""
+
     }
     buildTypes {
         release {
