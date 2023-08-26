@@ -7,6 +7,7 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.result.Result
 import org.json.JSONObject
 import com.github.kittinunf.fuel.httpPut
+import com.internetarchive.waybackmachine.BuildConfig
 import java.io.File
 
 
@@ -14,15 +15,15 @@ class APIManager private constructor(context: Context?) {
     companion object : SingletonHolder<APIManager, Context?>(::APIManager)
 
     private val BaseURL = "https://archive.org/"
-    private val API_CREATE = "services/xauthn/?op=create"
-    private val API_LOGIN = "services/xauthn/?op=login"
+    private val API_CREATE = BuildConfig.API_CREATE
+    private val API_LOGIN = BuildConfig.API_LOGIN
     private val API_AVAILABILITY = "wayback/available"
     private val UploadURL = "https://s3.us.archive.org"
     private val SparkLineURL = "https://web.archive.org/__wb/sparkline"
     private val API_METADATA = "metadata/"
     private val API_VERSION = 1
-    private val ACCESS = "trS8dVjP8dzaE296"
-    private val SECRET = "ICXDO78cnzUlPAt1"
+    private val ACCESS = BuildConfig.ACCESS
+    private val SECRET = BuildConfig.SECRET
     private var HEADER: MutableMap<String, String>
     private var TIMEOUT = 60*1000*60
     private var TIMEOUTREAD = 60*1000*60
