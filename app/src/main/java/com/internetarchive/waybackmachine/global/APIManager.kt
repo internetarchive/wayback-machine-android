@@ -15,15 +15,12 @@ class APIManager private constructor(context: Context?) {
     companion object : SingletonHolder<APIManager, Context?>(::APIManager)
 
     private val BaseURL = "https://archive.org/"
-    private val API_CREATE = BuildConfig.API_CREATE
-    private val API_LOGIN = BuildConfig.API_LOGIN
+    private val API_LOGIN = "services/xauthn/?op=login"
     private val API_AVAILABILITY = "wayback/available"
     private val UploadURL = "https://s3.us.archive.org"
     private val SparkLineURL = "https://web.archive.org/__wb/sparkline"
     private val API_METADATA = "metadata/"
     private val API_VERSION = 1
-    private val ACCESS = BuildConfig.ACCESS
-    private val SECRET = BuildConfig.SECRET
     private var HEADER: MutableMap<String, String>
     private var TIMEOUT = 60*1000*60
     private var TIMEOUTREAD = 60*1000*60
@@ -45,8 +42,6 @@ class APIManager private constructor(context: Context?) {
                                   completion: (Boolean, JSONObject?, Int?) -> Unit) {
         val parameters: MutableList<Pair<String, Any>> = mutableListOf()
         parameters.addAll(params)
-        parameters.add("access" to ACCESS)
-        parameters.add("secret" to SECRET)
         parameters.add("version" to API_VERSION)
 
         Fuel.post(BaseURL + op, parameters).responseJson{_, response, result ->
@@ -103,33 +98,33 @@ class APIManager private constructor(context: Context?) {
     }
 
     // Register new Account
-    fun registerAccount(email: String,
-                        password: String,
-                        username: String,
-                        completion: (Boolean, String?) -> Unit) {
-        SendDataToService(listOf(
-            "screenname" to username,
-            "email" to email,
-            "password" to password,
-            "verified" to false
-        ), API_CREATE
-        ) { success, data, errCode ->
-            if (success) {
-                val register_success = data?.getBoolean("success")
-                if (register_success != null) {
-                    if (register_success) {
-                        completion(true, null)
-                    } else {
-                        completion(false, Errors["account_already_used"])
-                    }
-                } else {
-                    completion(false, errCode?.toString())
-                }
-            } else {
-                completion(false, errCode?.toString())
-            }
-        }
-    }
+    // fun registerAccount(email: String,
+    //                     password: String,
+    //                     username: String,
+    //                     completion: (Boolean, String?) -> Unit) {
+    //     SendDataToService(listOf(
+    //         "screenname" to username,
+    //         "email" to email,
+    //         "password" to password,
+    //         "verified" to false
+    //     ), API_CREATE
+    //     ) { success, data, errCode ->
+    //         if (success) {
+    //             val register_success = data?.getBoolean("success")
+    //             if (register_success != null) {
+    //                 if (register_success) {
+    //                     completion(true, null)
+    //                 } else {
+    //                     completion(false, Errors["account_already_used"])
+    //                 }
+    //             } else {
+    //                 completion(false, errCode?.toString())
+    //             }
+    //         } else {
+    //             completion(false, errCode?.toString())
+    //         }
+    //     }
+    // }
 
     // Login
     fun login(email: String,

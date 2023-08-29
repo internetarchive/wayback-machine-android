@@ -24,8 +24,8 @@ class SignupFragment : Fragment(), View.OnClickListener {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_signup, container, false)
-        view.btnContinue.setOnClickListener(this)
-        view.btnCancel.setOnClickListener(this)
+        // view.btnContinue.setOnClickListener(this)
+        // view.btnCancel.setOnClickListener(this)
 
         return view
     }
@@ -42,64 +42,61 @@ class SignupFragment : Fragment(), View.OnClickListener {
         if (v == null) return
 
         when (v.id) {
-            R.id.btnContinue -> {
-                onContinue()
-            }
             R.id.btnCancel -> {
                 mainActivity?.replaceSigninFragment()
             }
         }
     }
 
-    private fun onContinue() {
-        if (!validateFields()) return
+    // private fun onContinue() {
+    //     if (!validateFields()) return
 
-        mainActivity?.showProgressBar()
+    //     mainActivity?.showProgressBar()
 
-        val username = ctxtUsername.text.toString()
-        val email = ctxtEmail.text.toString()
-        val password = ctxtPassword.text.toString()
+    //     val username = ctxtUsername.text.toString()
+    //     val email = ctxtEmail.text.toString()
+    //     val password = ctxtPassword.text.toString()
 
-        APIManager.getInstance(mainActivity).registerAccount(email, password, username) { success, err ->
-            mainActivity?.runOnUiThread {
-                mainActivity?.hideProgressBar()
-                if (success) {
-                    AppManager.getInstance(mainActivity)
-                        .displayToast("We just sent verification email. Please try to verify your account.")
-                    mainActivity?.replaceSigninFragment()
-                } else {
-                    AppManager.getInstance(mainActivity).displayToast(err!!)
-                }
-            }
-        }
-    }
+    //     APIManager.getInstance(mainActivity).registerAccount(email, password, username) { success, err ->
+    //         mainActivity?.runOnUiThread {
+    //             mainActivity?.hideProgressBar()
+    //             if (success) {
+    //                 AppManager.getInstance(mainActivity)
+    //                     .displayToast("We just sent verification email. Please try to verify your account.")
+    //                 mainActivity?.replaceSigninFragment()
+    //             } else {
+    //                 AppManager.getInstance(mainActivity).displayToast(err!!)
+    //             }
+    //         }
+    //     }
+    // }
 
-    private fun validateFields(): Boolean {
-        if (ctxtUsername.text.isEmpty()) {
-            AppManager.getInstance(mainActivity).displayToast("Please enter your username")
-            return false
-        }
-        if (ctxtEmail.text.isEmpty()) {
-            AppManager.getInstance(mainActivity).displayToast("Please enter your email")
-            return false
-        }
-        if (ctxtPassword.text.isEmpty()) {
-            AppManager.getInstance(mainActivity).displayToast("Please enter your password")
-            return false
-        }
-        if (ctxtConfirmPassword.text.isEmpty()) {
-            AppManager.getInstance(mainActivity).displayToast("Please confirm your password")
-            return false
-        }
-        if (ctxtPassword.text.toString() != ctxtConfirmPassword.text.toString()) {
-            AppManager.getInstance(mainActivity).displayToast("Password does not match")
-            ctxtPassword.text.clear()
-            ctxtConfirmPassword.text.clear()
-            return false
-        }
+    // private fun validateFields(): Boolean {
+    //     if (ctxtUsername.text.isEmpty()) {
+    //         AppManager.getInstance(mainActivity).displayToast("Please enter your username")
+    //         return false
+    //     }
+    //     if (ctxtEmail.text.isEmpty()) {
+    //         AppManager.getInstance(mainActivity).displayToast("Please enter your email")
+    //         return false
+    //     }
+    //     if (ctxtPassword.text.isEmpty()) {
+    //         AppManager.getInstance(mainActivity).displayToast("Please enter your password")
+    //         return false
+    //     }
+    //     if (ctxtConfirmPassword.text.isEmpty()) {
+    //         AppManager.getInstance(mainActivity).displayToast("Please confirm your password")
+    //         return false
+    //     }
+    //     if (ctxtPassword.text.toString() != ctxtConfirmPassword.text.toString()) {
+    //         AppManager.getInstance(mainActivity).displayToast("Password does not match")
+    //         ctxtPassword.text.clear()
+    //         ctxtConfirmPassword.text.clear()
+    //         return false
+    //     }
 
-        return true
-    }
+    //     return true
+    // }
 
     companion object {
         @JvmStatic
