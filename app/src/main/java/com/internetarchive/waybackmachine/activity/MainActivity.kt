@@ -107,12 +107,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         selectFragment(navView.menu.getItem(index))
     }
 
-    fun replaceSignupFragment() {
-        val frag = SignupFragment.newInstance()
-        val manager = supportFragmentManager.beginTransaction()
-        manager.replace(container.id, frag)
-        manager.commit()
-    }
+    // fun replaceSignupFragment() {
+    //     val frag = SignupFragment.newInstance()
+    //     val manager = supportFragmentManager.beginTransaction()
+    //     manager.replace(container.id, frag)
+    //     manager.commit()
+    // }
 
     fun replaceAccountFragment() {
         val frag = AccountFragment.newInstance()

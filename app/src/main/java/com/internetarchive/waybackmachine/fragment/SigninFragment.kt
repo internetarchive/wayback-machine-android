@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.content.Intent
+
 
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.activity.MainActivity
+import com.internetarchive.waybackmachine.activity.WebpageActivity
 import com.internetarchive.waybackmachine.global.APIManager
 import com.internetarchive.waybackmachine.global.AppManager
 import com.internetarchive.waybackmachine.model.UserModel
@@ -54,9 +57,15 @@ class SigninFragment : Fragment(), View.OnClickListener {
                 login(txtEmail.text.toString(), txtPassword.text.toString())
             }
             R.id.btnSignUp -> {
-                mainActivity?.replaceSignupFragment()
+                openWebPage("https://archive.org/account/signup")
             }
         }
+    }
+
+    private fun openWebPage(url: String) {
+        val intent = Intent(context, WebpageActivity::class.java)
+        intent.putExtra("URL", url)
+        startActivity(intent)
     }
 
     private fun login(email: String, password: String) {
