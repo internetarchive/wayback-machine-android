@@ -39,6 +39,7 @@ class WebpageActivity : AppCompatActivity(), View.OnClickListener {
 
         val header = mutableMapOf<String, String>()
         header["User-Agent"] = "Wayback_Machine_Android/" + AppManager.getInstance(this).getVersionName()
+        webView.settings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
         webView.webViewClient = webViewClient
         webView.loadUrl(url?: "", header)
         containerIndicator.visibility = View.VISIBLE
