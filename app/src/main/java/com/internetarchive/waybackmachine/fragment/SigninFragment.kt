@@ -83,7 +83,7 @@ class SigninFragment : Fragment(), View.OnClickListener {
                 // Retrieve the "cookies" JSONObject
                 val cookiesObject = valuesObject?.getJSONObject("cookies")
 
-                // Retrive the s3 JSONObject
+                // Retrieve the s3 JSONObject
                 val s3Data = valuesObject?.getJSONObject("s3")
 
                 // Retrieve the value of the "logged-in-sig" key
