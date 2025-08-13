@@ -14,9 +14,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.TextView
 
 import com.internetarchive.waybackmachine.R
-import kotlinx.android.synthetic.main.fragment_about.view.*
 
 class AboutFramgment : Fragment() {
     private lateinit var mContext: Context
@@ -25,6 +25,10 @@ class AboutFramgment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_about, container, false)
+
+        // Initialize views
+        val txtSupport: TextView = view.findViewById(R.id.txtSupport)
+        val txtVersion: TextView = view.findViewById(R.id.txtVersion)
 
         val spannable = SpannableString(resources.getString(R.string.support))
         val str = spannable.toString()
@@ -57,13 +61,16 @@ class AboutFramgment : Fragment() {
         }
 
         ssText.setSpan(clickableSpan, iStart, iEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        view.txtSupport.text = ssText
-        view.txtSupport.movementMethod = LinkMovementMethod.getInstance()
+        txtSupport.text = ssText
+        txtSupport.movementMethod = LinkMovementMethod.getInstance()
 
-        val versionName = activity!!.packageManager.getPackageInfo(activity!!.packageName, 0).versionName
-        val versionText = resources.getString(R.string.version_text, view.txtVersion.text.toString(), versionName)
-        view.txtVersion.text = versionText
-
+        // Use requireActivity() instead of activity!! to prevent crashes
+        val versionName = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0).versionName
+        val versionText = resources.getString(R.string.version_text, txtVersion.text.toString(), versionName)
+        txtVersion.text = versionText
+        
+        // Also log the version for debugging
+        android.util.Log.d("AboutFragment", "App Version: $versionName")
 
         return view
     }

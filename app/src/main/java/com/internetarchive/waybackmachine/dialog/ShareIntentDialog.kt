@@ -8,7 +8,9 @@ import android.view.Window
 import android.widget.AdapterView
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.adapter.ShareIntentListAdapter
-import kotlinx.android.synthetic.main.dialog_share.*
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Button
 
 class ShareIntentDialog : Dialog {
     private var mContext: Context? = null
@@ -16,6 +18,12 @@ class ShareIntentDialog : Dialog {
     private var titleText: String? = null
     private var isShowDialogTitle: Boolean = false
     private var itemPosition: Int = 0
+
+    // View references
+    private lateinit var listShareIntents: ListView
+    private lateinit var shareTitle: TextView
+    private lateinit var btnCancel: Button
+    private lateinit var btnShare: Button
 
     private constructor(context: Context) : super(context) {
         this.mContext = context
@@ -27,10 +35,16 @@ class ShareIntentDialog : Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_share)
 
+        // Initialize views
+        listShareIntents = findViewById(R.id.listShareIntents)
+        shareTitle = findViewById(R.id.shareTitle)
+        btnCancel = findViewById(R.id.btnCancel)
+        btnShare = findViewById(R.id.btnShare)
+
         val adapter = ShareIntentListAdapter(context, this.shareLink)
 
         listShareIntents.adapter = adapter
-        listShareIntents!!.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        listShareIntents.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             itemPosition = position
             adapter.setCurrentPosition(position)
             adapter.notifyDataSetChanged()
@@ -39,11 +53,11 @@ class ShareIntentDialog : Dialog {
         shareTitle.text = titleText
 
         if (!this.isShowDialogTitle) {
-            this.shareTitle!!.visibility = View.GONE
+            this.shareTitle.visibility = View.GONE
         }
 
-        btnCancel!!.setOnClickListener { this.dismiss() }
-        btnShare!!.setOnClickListener { adapter.toggleSend(itemPosition) }
+        btnCancel.setOnClickListener { this.dismiss() }
+        btnShare.setOnClickListener { adapter.toggleSend(itemPosition) }
     }
 
     class Builder(val context: Context) {

@@ -57,26 +57,26 @@ class ShareIntentListAdapter(private val context: Context, private val shareLink
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+        var view = convertView
         val holder: ViewHolder?
 
-        if (convertView == null) {
+        if (view == null) {
             val inflater = context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             holder = ViewHolder()
-            convertView = inflater.inflate(R.layout.item_share, parent,
+            view = inflater.inflate(R.layout.item_share, parent,
                     false)
-            holder.image = convertView
+            holder.image = view
                     .findViewById<View>(R.id.shareIntentItemIcon) as ImageView
-            holder.text = convertView
+            holder.text = view
                     .findViewById<View>(R.id.shareIntentItemText) as TextView
             if (typeface != null) {
                 holder.text!!.typeface = typeface
             }
 
-            convertView.tag = holder
+            view.tag = holder
         } else {
-            holder = convertView.tag as ViewHolder
+            holder = view.tag as ViewHolder
         }
 
         val info = listResolve!![position]
@@ -88,12 +88,12 @@ class ShareIntentListAdapter(private val context: Context, private val shareLink
 //                activityInfo.applicationInfo.packageName, activityInfo.name)
 
         if (position == currentPosition) {
-            convertView!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorYellow))
+            view!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorYellow))
         } else {
-            convertView!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorGreen))
+            view!!.setBackgroundColor(ContextCompat.getColor(context, R.color.shareContentColorGreen))
         }
 
-        return convertView
+        return view
     }
 
     fun toggleSend(position: Int) {

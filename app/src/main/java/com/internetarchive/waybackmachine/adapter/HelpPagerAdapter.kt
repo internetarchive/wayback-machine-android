@@ -4,35 +4,38 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.PagerAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.internetarchive.waybackmachine.R
 
-class HelpPagerAdapter : PagerAdapter() {
+class HelpPagerAdapter : RecyclerView.Adapter<HelpPagerAdapter.HelpViewHolder>() {
 
-    override fun getCount(): Int {
-        return 3
+    inner class HelpViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HelpViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.page_help_1, parent, false)
+        return HelpViewHolder(view)
     }
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val inflater = container.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        var resId = 0
+    override fun onBindViewHolder(holder: HelpViewHolder, position: Int) {
+        // For now, all positions show the same content
+        // You can customize this later to show different content for each position
+        val inflater = LayoutInflater.from(holder.itemView.context)
+        var resId = R.layout.page_help_1
+        
         when (position) {
             0 -> resId = R.layout.page_help_1
             1 -> resId = R.layout.page_help_2
             2 -> resId = R.layout.page_help_3
         }
-
-        val view = inflater.inflate(resId, container, false)
-        container.addView(view)
-
-        return view
+        
+        // Clear the current view and inflate the new one
+        (holder.itemView as ViewGroup).removeAllViews()
+        val newView = inflater.inflate(resId, holder.itemView as ViewGroup, false)
+        (holder.itemView as ViewGroup).addView(newView)
     }
 
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as View)
-    }
-
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object`
+    override fun getItemCount(): Int {
+        return 3
     }
 }

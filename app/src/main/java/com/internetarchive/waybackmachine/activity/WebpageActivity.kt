@@ -9,13 +9,29 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.global.AppManager
-import kotlinx.android.synthetic.main.activity_webpage.*
+import android.widget.TextView
+import android.widget.ImageView
+import android.widget.FrameLayout
 
 class WebpageActivity : AppCompatActivity(), View.OnClickListener {
+
+    // View references
+    private lateinit var btnBack: TextView
+    private lateinit var btnOpen: ImageView
+    private lateinit var btnShare: ImageView
+    private lateinit var webView: WebView
+    private lateinit var containerIndicator: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webpage)
+
+        // Initialize views
+        btnBack = findViewById(R.id.btnBack)
+        btnOpen = findViewById(R.id.btnOpen)
+        btnShare = findViewById(R.id.btnShare)
+        webView = findViewById(R.id.webView)
+        containerIndicator = findViewById(R.id.containerIndicator)
 
         val url = intent.getStringExtra("URL")
 
