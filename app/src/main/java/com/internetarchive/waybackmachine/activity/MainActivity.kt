@@ -117,22 +117,22 @@ class MainActivity : AppCompatActivity() {
 
         try {
             android.util.Log.d("MainActivity", "Selecting fragment for item: ${item.title}")
-            
-            // init corresponding fragment
-            when (item.itemId) {
-                R.id.menu_home -> {
+
+        // init corresponding fragment
+        when (item.itemId) {
+            R.id.menu_home -> {
                     android.util.Log.d("MainActivity", "Creating HomeFragment")
-                    frag = HomeFragment.newInstance()
-                }
-                R.id.menu_help -> {
+                frag = HomeFragment.newInstance()
+            }
+            R.id.menu_help -> {
                     android.util.Log.d("MainActivity", "Creating HelpFragment")
-                    frag = HelpFragment.newInstance()
-                }
-                R.id.menu_about -> {
+                frag = HelpFragment.newInstance()
+            }
+            R.id.menu_about -> {
                     android.util.Log.d("MainActivity", "Creating AboutFragment")
-                    frag = AboutFramgment.newInstance()
-                }
-                R.id.menu_account -> {
+                frag = AboutFramgment.newInstance()
+            }
+            R.id.menu_account -> {
                     android.util.Log.d("MainActivity", "Creating Account/Signin Fragment")
                     
                     // Check if user is logged in to determine which fragment to show
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                     if (userInfo != null) {
                         // User is logged in - allow access to upload section
                         frag = UploadFragment.newInstance()
-                    } else {
+                } else {
                         // User is not logged in - show login dialog and redirect to login
                         
                         // Show login required dialog
@@ -343,7 +343,7 @@ class MainActivity : AppCompatActivity() {
             
             // Create and replace the fragment
             android.util.Log.d("MainActivity", "🔄 Creating SigninFragment instance")
-            val frag = SigninFragment.newInstance()
+        val frag = SigninFragment.newInstance()
             android.util.Log.d("MainActivity", "✅ SigninFragment created successfully: ${frag.javaClass.simpleName}")
             
             // Get current fragment info for debugging
