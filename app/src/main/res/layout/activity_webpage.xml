@@ -68,14 +68,13 @@
         android:background="@color/indicatorContainerColor"
         android:id="@+id/containerIndicator">
 
-        <com.wang.avi.AVLoadingIndicatorView
+        <ProgressBar
             android:id="@+id/indicator_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AVLoadingIndicatorView"
             android:visibility="visible"
-            app:indicatorName="BallSpinFadeLoaderIndicator"
-            app:indicatorColor="@color/white"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/white"
             android:layout_gravity="center" />
 
     </FrameLayout>

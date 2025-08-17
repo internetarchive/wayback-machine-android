@@ -21,7 +21,9 @@ object BottomNavigationViewHelper {
 
                 item.setShifting(false)
                 // set once again checked value, so view will be updated
-                item.setChecked(item.itemData.isChecked)
+                item.itemData?.let { itemData ->
+                    item.setChecked(itemData.isChecked)
+                }
             }
         } catch (e: NoSuchFieldException) {
             Log.e("BNVHelper", "Unable to get shift mode field", e)

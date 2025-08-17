@@ -98,13 +98,15 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter" />
 
-                <com.jarvanmo.exoplayerview.ui.ExoVideoView
+                <androidx.media3.ui.PlayerView
                     android:id="@+id/videoView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:controller_display_mode="none">
+                    app:show_buffering="when_playing"
+                    app:show_subtitle_button="false"
+                    app:show_timeout="0">
 
-                </com.jarvanmo.exoplayerview.ui.ExoVideoView>
+                </androidx.media3.ui.PlayerView>
 
             </FrameLayout>
 

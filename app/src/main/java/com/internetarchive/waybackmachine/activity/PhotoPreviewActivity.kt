@@ -57,7 +57,6 @@ class PhotoPreviewActivity : AppCompatActivity() {
                 Glide.with(mContext)
                         .load(uri)
                         .apply(options)
-                        .thumbnail(0.2f)
                         .into(photoView)
             }
 

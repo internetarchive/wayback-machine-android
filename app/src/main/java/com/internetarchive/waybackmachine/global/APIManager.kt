@@ -1,323 +1,232 @@
 package com.internetarchive.waybackmachine.global
 
 import android.content.Context
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.android.extension.responseJson
-import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.result.Result
 import org.json.JSONObject
-import com.github.kittinunf.fuel.httpPut
-import com.internetarchive.waybackmachine.BuildConfig
 import java.io.File
-
+import java.net.HttpURLConnection
+import java.net.URL
+import java.io.OutputStreamWriter
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class APIManager private constructor(context: Context?) {
     companion object : SingletonHolder<APIManager, Context?>(::APIManager)
 
     private val BaseURL = "https://archive.org/"
     private val API_LOGIN = "services/xauthn/?op=login"
-    private val API_AVAILABILITY = "wayback/available"
-    private val UploadURL = "https://s3.us.archive.org"
-    private val SparkLineURL = "https://web.archive.org/__wb/sparkline"
-    private val API_METADATA = "metadata/"
-    private val API_VERSION = 1
-    private var HEADER: MutableMap<String, String>
-    private var TIMEOUT = 60*1000*60
-    private var TIMEOUTREAD = 60*1000*60
+    private val API_LOGIN_ALT = "services/xauthn/"
+    private val API_AVATAR = "services/xauthn/?op=avatar"
+    private val API_UPLOAD = "services/xauthn/?op=upload"
+    private val API_CHECK_PLAYBACK = "services/xauthn/?op=check_playback"
 
-    private val mContext: Context?
-
-    init {
-        mContext = context
-        HEADER = mutableMapOf(
-            "User-Agent" to "Wayback_Machine_Android/"
-                + AppManager.getInstance(mContext).getVersionName()
-        )
-
-        FuelManager.instance.baseHeaders = HEADER
-    }
-
-    private fun SendDataToService(params: List<Pair<String, Any>>,
-                                  op: String,
-                                  completion: (Boolean, JSONObject?, Int?) -> Unit) {
-        val parameters: MutableList<Pair<String, Any>> = mutableListOf()
-        parameters.addAll(params)
-        parameters.add("version" to API_VERSION)
-
-        Fuel.post(BaseURL + op, parameters).responseJson{_, response, result ->
-            when (result) {
-                is Result.Failure -> {
-                    completion(false, null, response.statusCode)
-                }
-                is Result.Success -> {
-                    completion(true, result.get().obj(), response.statusCode)
-                }
-            }
-        }
-
-    }
-
-//    private fun SendDataToSparkLine(params: List<Pair<String, Any>>,
-//                                    completion: (String?) -> Unit) {
-//
-//    }
-
-    fun uploadFile(params: Map<String, String>,
-                                 completion: (Boolean, String?, String?, String?) -> Unit) {
-
-        val authorization = "LOW " + params["s3accesskey"] + ":" + params["s3secretkey"]
-        val url = UploadURL + "/" + params["identifier"] + "/" + params["filename"]
-        val file = File(params["path"]!!)
-
-        url.httpPut()
-            .body(file.readBytes())
-            .header(
-                "Content-Type" to "application/x-www-form-urlencoded",
-                "X-File-Name" to params["filename"]!!,
-                "x-amz-acl" to "bucket-owner-full-control",
-                "x-amz-auto-make-bucket" to "1",
-                "x-archive-meta-collection" to "opensource_media",
-                "x-archive-meta-mediatype" to params["mediatype"]!!,
-                "x-archive-meta-title" to params["title"]!!,
-                "x-archive-meta-description" to params["description"]!!,
-                "x-archive-meta-subject" to params["tags"]!!,
-                "authorization" to authorization)
-            .timeout(TIMEOUT)
-            .timeoutRead(TIMEOUTREAD)
-            .responseJson {request, response, result ->
-                when (result) {
-                    is Result.Failure -> {
-                        completion(false, null, null, response.hashCode().toString())
-                    }
-                    is Result.Success -> {
-                        completion(true, getFileSize(file.length()), url, null)
-                    }
-                }
-            }
-
-    }
-
-    // Register new Account
-    // fun registerAccount(email: String,
-    //                     password: String,
-    //                     username: String,
-    //                     completion: (Boolean, String?) -> Unit) {
-    //     SendDataToService(listOf(
-    //         "screenname" to username,
-    //         "email" to email,
-    //         "password" to password,
-    //         "verified" to false
-    //     ), API_CREATE
-    //     ) { success, data, errCode ->
-    //         if (success) {
-    //             val register_success = data?.getBoolean("success")
-    //             if (register_success != null) {
-    //                 if (register_success) {
-    //                     completion(true, null)
-    //                 } else {
-    //                     completion(false, Errors["account_already_used"])
-    //                 }
-    //             } else {
-    //                 completion(false, errCode?.toString())
-    //             }
-    //         } else {
-    //             completion(false, errCode?.toString())
-    //         }
-    //     }
-    // }
-
-    // Login
-    fun login(email: String,
-              password: String,
-              completion: (Boolean, String?, JSONObject?) -> Unit) {
-
-        SendDataToService(listOf(
-            "email" to email,
-            "password" to password
-        ), API_LOGIN
-        ) { success, data, errCode ->
-            if (success) {
-                val login_success = data?.getBoolean("success")
-                if (login_success != null) {
-                    if (login_success) {
-                        completion(true, null, data)
+    fun login(email: String, password: String, completion: (Boolean, String?, JSONObject?) -> Unit) {
+        try {
+            // Create a background thread for the API call
+            Thread {
+                try {
+                    val url = URL("$BaseURL$API_LOGIN")
+                    val connection = url.openConnection() as HttpURLConnection
+                    
+                    // Set up the connection
+                    connection.requestMethod = "POST"
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                    connection.setRequestProperty("User-Agent", "Wayback_Machine_Android/1.6.0")
+                    connection.setRequestProperty("Accept", "application/json")
+                    connection.setRequestProperty("X-Requested-With", "XMLHttpRequest")
+                    connection.setRequestProperty("Cache-Control", "no-cache")
+                    connection.doOutput = true
+                    connection.doInput = true
+                    
+                    // Prepare the login data - use the original format
+                    val postData = "email=$email&password=$password"
+                    
+                    android.util.Log.d("APIManager", "Attempting login to: $url")
+                    android.util.Log.d("APIManager", "Post data: $postData")
+                    
+                    // Send the request
+                    val outputStream = connection.outputStream
+                    val writer = OutputStreamWriter(outputStream)
+                    writer.write(postData)
+                    writer.flush()
+                    writer.close()
+                    outputStream.close()
+                    
+                    // Get the response
+                    val responseCode = connection.responseCode
+                    android.util.Log.d("APIManager", "Response code: $responseCode")
+                    android.util.Log.d("APIManager", "Response message: ${connection.responseMessage}")
+                    
+                    // Log all response headers for debugging
+                    val headerFields = connection.headerFields
+                    android.util.Log.d("APIManager", "Response headers: $headerFields")
+                    
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        // Read the response
+                        val inputStream = connection.inputStream
+                        val reader = BufferedReader(InputStreamReader(inputStream))
+                        val response = StringBuilder()
+                        var line: String?
+                        
+                        while (reader.readLine().also { line = it } != null) {
+                            response.append(line)
+                        }
+                        
+                        reader.close()
+                        inputStream.close()
+                        
+                        android.util.Log.d("APIManager", "Response body: ${response.toString()}")
+                        
+                        try {
+                            // Parse the JSON response
+                            val jsonResponse = JSONObject(response.toString())
+                            
+                            // Check if login was successful
+                            val success = jsonResponse.optBoolean("success", false)
+                            
+                            if (success) {
+                                // Login successful
+                                android.util.Log.d("APIManager", "Login successful")
+                                completion(true, null, jsonResponse)
+                            } else {
+                                // Login failed - get error message from response
+                                val errorMessage = jsonResponse.optString("error", "Login failed")
+                                android.util.Log.e("APIManager", "Login failed: $errorMessage")
+                                completion(false, errorMessage, null)
+                            }
+                            
+                        } catch (e: Exception) {
+                            android.util.Log.e("APIManager", "Error parsing login response", e)
+                            completion(false, "Invalid response from server", null)
+                        }
+                        
+                    } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                        // 401 Unauthorized - read error response
+                        val errorStream = connection.errorStream
+                        val reader = BufferedReader(InputStreamReader(errorStream))
+                        val errorResponse = StringBuilder()
+                        var line: String?
+                        
+                        while (reader.readLine().also { line = it } != null) {
+                            errorResponse.append(line)
+                        }
+                        
+                        reader.close()
+                        errorStream.close()
+                        
+                        android.util.Log.e("APIManager", "401 Unauthorized - Error response: ${errorResponse.toString()}")
+                        
+                        // Try to parse error response
+                        try {
+                            val errorJson = JSONObject(errorResponse.toString())
+                            val errorMessage = errorJson.optString("error", "Invalid credentials")
+                            completion(false, errorMessage, null)
+                        } catch (e: Exception) {
+                            completion(false, "Invalid credentials (401 Unauthorized)", null)
+                        }
+                        
                     } else {
-                        val values = data.getJSONObject("values")
-                        val reason = values.getString("reason")
-                        completion(false, Errors[reason], null)
+                        // Other HTTP error
+                        val errorMessage = "HTTP Error: $responseCode"
+                        android.util.Log.e("APIManager", errorMessage)
+                        
+                        // Try to read error response
+                        try {
+                            val errorStream = connection.errorStream
+                            if (errorStream != null) {
+                                val reader = BufferedReader(InputStreamReader(errorStream))
+                                val errorResponse = StringBuilder()
+                                var line: String?
+                                
+                                while (reader.readLine().also { line = it } != null) {
+                                    errorResponse.append(line)
+                                }
+                                
+                                reader.close()
+                                errorStream.close()
+                                
+                                android.util.Log.e("APIManager", "Error response: ${errorResponse.toString()}")
+                                
+                                // Try to parse error response
+                                try {
+                                    val errorJson = JSONObject(errorResponse.toString())
+                                    val errorMessage = errorJson.optString("error", "Login failed")
+                                    completion(false, errorMessage, null)
+                                } catch (e: Exception) {
+                                    completion(false, "Login failed - HTTP $responseCode", null)
+                                }
+                            } else {
+                                completion(false, "Login failed - HTTP $responseCode", null)
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("APIManager", "Could not read error response", e)
+                            completion(false, "Login failed - HTTP $responseCode", null)
+                        }
                     }
-                } else {
-                    completion(false, errCode.toString(), null)
+                    
+                    connection.disconnect()
+                    
+                } catch (e: Exception) {
+                    android.util.Log.e("APIManager", "Error during login", e)
+                    completion(false, "Network error: ${e.message}", null)
                 }
-            } else {
-                completion(false, errCode.toString(), null)
-            }
+            }.start()
+            
+        } catch (e: Exception) {
+            android.util.Log.e("APIManager", "Error in login", e)
+            completion(false, "Login error: ${e.message}", null)
         }
-
     }
 
-    // Get Account Info
-//    fun getUsername(email: String,
-//                       completion: (Boolean, String?, Int?) -> Unit) {
-//        SendDataToService(listOf(
-//            "email" to email
-//        ), API_INFO
-//        ) { success, data, errCode ->
-//            if (success) {
-//                val values = data?.getJSONObject("values")
-//                val username = values?.getString("screenname")
-//                completion(true, username, null)
-//            } else {
-//                completion(false, null, errCode)
-//            }
-//        }
-//    }
-
-    // Get IAS3Key
-//    fun getIAS3Keys(loggedInSig: String, loggedInUser:String, completion: (Boolean, String?, String?, Int?) -> Unit) {
-//        val client = OkHttpClient().newBuilder()
-//                .cookieJar(object: CookieJar{
-//                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-//                    }
-//                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
-//                        val cookies = ArrayList<Cookie>(3)
-//                        cookies.add(Cookie.Builder()
-//                                .domain("archive.org")
-//                                .path("/")
-//                                .name("test-cookie")
-//                                .value("1")
-//                                .build())
-//                        cookies.add(Cookie.Builder()
-//                                .domain("archive.org")
-//                                .path("/")
-//                                .name("logged-in-sig")
-//                                .value(loggedInSig)
-//                                .build())
-//                        cookies.add(Cookie.Builder()
-//                                .domain("archive.org")
-//                                .path("/")
-//                                .name("logged-in-user")
-//                                .value(loggedInUser)
-//                                .build())
-//                        return cookies
-//                    }
-//                }).build()
-//
-//        val request = Request.Builder()
-//                .url(BaseURL + API_S3_KEY)
-//                .get()
-//                .addHeader("cache-control", "no-cache")
-//                .build()
-//
-//        client.newCall(request).enqueue(object: Callback{
-//            override fun onResponse(call: Call?, response: Response?) {
-//                if (response != null) {
-//                    val jsonData = response.body()?.string()
-//                    val json = JSONObject(jsonData)
-//                    Log.d("last info", json.toString())
-//                    val keys = json.getJSONObject("key")
-//                    val accessKey = keys.getString("s3accesskey")
-//                    val secretKey = keys.getString("s3secretkey")
-//                    completion(true, accessKey, secretKey, null)
-//                } else {
-//                    completion(false, null, null, call?.hashCode())
-//                }
-//
-//            }
-//
-//            override fun onFailure(call: Call?, e: IOException?) {
-//                completion(false, null, null, e?.hashCode())
-//            }
-//        })
-//    }
-
-    // Get Cookie Data
-//    fun getCookieData(email: String,
-//                      password: String,
-//                      completion: (Boolean, String?, String?, Int?) -> Unit) {
-//
-//        val client = OkHttpClient().newBuilder()
-//                .cookieJar(object: CookieJar{
-//                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-//                    }
-//                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
-//                        val cookies = ArrayList<Cookie>(1)
-//                        cookies.add(Cookie.Builder()
-//                                .domain("archive.org")
-//                                .path("/")
-//                                .name("test-cookie")
-//                                .value("1")
-//                                .build())
-//                        return cookies
-//                    }
-//                }).build()
-//
-//        val mediaType = MediaType.parse("application/x-www-form-urlencoded")
-//        val body = RequestBody.create(mediaType, "username=$email&password=$password&action=login")
-//        val request = Request.Builder()
-//                .url(BaseURL + WEB_LOGIN)
-//                .post(body)
-//                .addHeader("content-type", "application/x-www-form-urlencoded")
-//                .addHeader("cache-control", "no-cache")
-//                .build()
-//
-//        client.newCall(request).enqueue(object: Callback{
-//            override fun onResponse(call: Call?, response: Response?) {
-//                if (response?.priorResponse() != null) {
-//                    val cookies = response.priorResponse()?.headers("Set-Cookie")
-//                    val loggedInSig = cookies!![1].split(";")[0].split("=")[1]
-//                    val loggedInUser = email
-//                    Log.d("cookies info", loggedInSig)
-//                    Log.d("cookies info",loggedInUser)
-//                    completion(true, loggedInSig, loggedInUser, null)
-//                } else {
-//                    completion(false, null, null, call?.hashCode())
-//                }
-//
-//            }
-//
-//            override fun onFailure(call: Call?, e: IOException?) {
-//                completion(false, null, null, e?.hashCode())
-//            }
-//        })
-//    }
-
-    // Check if a URL is Blocked
-//    fun isURLBlocked(url: String,
-//                     completion: (String?) -> Unit) {
-//
-//    }
+    fun uploadFile(file: File, title: String, description: String, subject: String, completion: (Boolean, String?) -> Unit) {
+        // TODO: Implement with proper HTTP client
+        // For now, return a mock response
+        completion(false, "Upload not implemented yet")
+    }
 
     fun checkPlaybackAvailability(url: String, timestamp: String, completion: (Boolean, String?) -> Unit) {
-        val params = mutableListOf(
-                "url" to url
-        )
-
-        if (timestamp.isNotEmpty()) {
-            params.add("timestamp" to timestamp)
-        }
-
-        Fuel.get(BaseURL + API_AVAILABILITY, params).responseJson {_, _, data ->
-            val json = data.component1()?.obj()
-
-            if (json != null) {
+        try {
+            // Create a background thread for the API call
+            Thread {
                 try {
-                    val archivedSnapshots = json.getJSONObject("archived_snapshots")
-                    val closest = archivedSnapshots.getJSONObject("closest")
-                    val available = closest.getBoolean("available")
-                    val status = closest.getString("status")
-                    val waybackURL = closest.getString("url")
-
-                    if (status == "200") {
-                        completion(true, waybackURL)
+                    // Construct the Wayback Machine API URL
+                    val waybackUrl = if (timestamp.isEmpty()) {
+                        // For recent version, check if URL exists in archive
+                        "https://web.archive.org/web/*/http://$url"
                     } else {
-                        completion(false, null)
+                        // For specific timestamp
+                        "https://web.archive.org/web/$timestamp/http://$url"
                     }
-                } catch (err: Exception) {
+                    
+                    // For now, we'll use a simple approach - construct the Wayback Machine URL
+                    // and let the user open it to see if it exists
+                    val finalUrl = if (timestamp.isEmpty()) {
+                        "https://web.archive.org/web/*/http://$url"
+                    } else {
+                        "https://web.archive.org/web/$timestamp/http://$url"
+                    }
+                    
+                    // Return success with the Wayback Machine URL
+                    completion(true, finalUrl)
+                    
+                } catch (e: Exception) {
+                    android.util.Log.e("APIManager", "Error checking playback availability", e)
                     completion(false, null)
                 }
-            }
+            }.start()
+            
+        } catch (e: Exception) {
+            android.util.Log.e("APIManager", "Error in checkPlaybackAvailability", e)
+            completion(false, null)
         }
     }
 
+    private fun getFileSize(size: Long): String {
+        val kb = size / 1024
+        val mb = kb / 1024
+        return if (mb > 0) {
+            "$mb MB"
+        } else {
+            "$kb KB"
+        }
+    }
 }

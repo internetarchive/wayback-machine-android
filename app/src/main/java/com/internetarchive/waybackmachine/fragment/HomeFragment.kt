@@ -9,28 +9,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
 
 import com.internetarchive.waybackmachine.R
 import com.internetarchive.waybackmachine.activity.MainActivity
 import com.internetarchive.waybackmachine.activity.WebpageActivity
 import com.internetarchive.waybackmachine.global.APIManager
 import com.internetarchive.waybackmachine.global.AppManager
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
     private var mainActivity: MainActivity? = null
+    
+    // View references
+    private lateinit var btnSave: Button
+    private lateinit var btnRecent: Button
+    private lateinit var btnFirst: Button
+    private lateinit var btnOverview: Button
+    private lateinit var txtURL: EditText
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        view.btnSave.setOnClickListener(this)
-        view.btnRecent.setOnClickListener(this)
-        view.btnFirst.setOnClickListener(this)
-        view.btnOverview.setOnClickListener(this)
+        // Initialize views
+        btnSave = view.findViewById(R.id.btnSave)
+        btnRecent = view.findViewById(R.id.btnRecent)
+        btnFirst = view.findViewById(R.id.btnFirst)
+        btnOverview = view.findViewById(R.id.btnOverview)
+        txtURL = view.findViewById(R.id.txtURL)
+
+        btnSave.setOnClickListener(this)
+        btnRecent.setOnClickListener(this)
+        btnFirst.setOnClickListener(this)
+        btnOverview.setOnClickListener(this)
 
         return view
     }
@@ -162,18 +176,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getURL(url: String): String {
-        var ret = url
-        val tmpArray = url.split("http")
-
-        when (tmpArray.count()) {
-            1 -> {
-                ret = "http://$ret"
-            }
-            3 -> {
-                ret = "http://$tmpArray[2]"
-            }
+        var ret = url.trim()
+        
+        // If URL doesn't start with http:// or https://, add http://
+        if (!ret.startsWith("http://") && !ret.startsWith("https://")) {
+            ret = "http://$ret"
         }
-
+        
+        // Remove any trailing slashes for consistency
+        ret = ret.trimEnd('/')
+        
         return ret
     }
 
