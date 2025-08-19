@@ -4,14 +4,14 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace "com.internetarchive.waybackmachine"
-    compileSdk 34
+    compileSdk 35
     
     defaultConfig {
         applicationId "com.internetarchive.waybackmachine"
         minSdk 21
-        targetSdk 34
-        versionCode 35
-        versionName "1.7.0"
+        targetSdk 35
+        versionCode 36
+        versionName "1.8.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     
@@ -60,7 +60,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     
     // UI Libraries - Using modern alternatives
-    implementation 'com.google.android.material:material:1.11.0' // Includes loading animations
     implementation 'androidx.viewpager2:viewpager2:1.0.0' // Modern ViewPager
     
     // Network Libraries
