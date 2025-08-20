@@ -120,8 +120,11 @@ class AppManager private constructor(context: Context?) {
         val context = this.mContext
 
         return if (context != null) {
-            context.packageManager.getPackageInfo(context.packageName, 0)
-                    .versionName
+            try {
+                context.packageManager.getPackageInfo(context.packageName, 0)?.versionName ?: ""
+            } catch (e: Exception) {
+                ""
+            }
         } else {
             ""
         }
