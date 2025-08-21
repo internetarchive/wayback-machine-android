@@ -1,8 +1,3 @@
----
-layout: default
-title: Privacy Policy & Terms
----
-
 # Internet Archive's Terms of Use, Privacy Policy, and Copyright Policy
 
 ## Terms of Use
