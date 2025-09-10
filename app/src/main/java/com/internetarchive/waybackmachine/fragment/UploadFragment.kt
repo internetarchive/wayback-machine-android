@@ -44,8 +44,8 @@ class UploadFragment : Fragment(), View.OnClickListener {
     private lateinit var txtDescription: android.widget.EditText
     private lateinit var txtSubject: android.widget.EditText
 
-    // Modern permission launcher
-    private var permissionLauncher: ActivityResultLauncher<String>? = null
+    // Modern permission launcher for multiple permissions
+    private var permissionLauncher: ActivityResultLauncher<Array<String>>? = null
     
     // Modern activity result launcher for image picker
     private var imagePickerLauncher: ActivityResultLauncher<Intent>? = null
@@ -53,21 +53,24 @@ class UploadFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Initialize permission launcher
+        // Initialize permission launcher for multiple permissions
         permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            if (isGranted) {
-                // Permission granted, proceed with image picker
-                android.util.Log.d("UploadFragment", "Permission granted, launching image picker")
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val allGranted = permissions.values.all { it }
+            android.util.Log.d("UploadFragment", "Permission results: $permissions")
+            
+            if (allGranted) {
+                // All permissions granted, proceed with image picker
+                android.util.Log.d("UploadFragment", "All permissions granted, launching image picker")
                 launchImagePicker()
             } else {
-                // Permission denied
-                android.util.Log.w("UploadFragment", "Permission denied by user")
+                // Some permissions denied
+                android.util.Log.w("UploadFragment", "Some permissions denied by user")
                 mainActivity?.let { activity ->
                     AlertDialog.Builder(activity)
                         .setTitle("Permission Required")
-                        .setMessage("Storage permission is required to select photos and videos. Please grant the permission in Settings.")
+                        .setMessage("Storage permissions are required to select photos and videos. Please grant the permissions in Settings.")
                         .setPositiveButton("Go to Settings") { _, _ ->
                             // Open app settings
                             val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -85,41 +88,80 @@ class UploadFragment : Fragment(), View.OnClickListener {
         imagePickerLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
+            android.util.Log.d("UploadFragment", "Image picker result: ${result.resultCode}")
+            
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data
+                android.util.Log.d("UploadFragment", "Image picker data: $data")
+                
                 if (ImagePicker.shouldHandle(100, result.resultCode, data)) {
                     val image = ImagePicker.getFirstImageOrNull(data)
-                    val resourceURI = android.net.Uri.parse(image.path)
-                    resourcePath = image.path
-
-                    if (resourcePath != null) {
-                        fileExt = resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).lowercase()
+                    android.util.Log.d("UploadFragment", "Selected image: $image")
+                    
+                    if (image != null && image.path.isNotEmpty()) {
+                        resourcePath = image.path
+                        val resourceURI = android.net.Uri.parse(image.path)
+                        
+                        // Determine file extension
+                        fileExt = if (resourcePath!!.contains(".")) {
+                            resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).lowercase()
+                        } else {
+                            ".jpg" // Default extension
+                        }
+                        
+                        android.util.Log.d("UploadFragment", "File extension: $fileExt, Path: $resourcePath")
                         
                         // Release any existing player
                         videoView.player?.release()
 
-                        if (fileExt == ".mp4" || fileExt == ".3gp" || fileExt == ".mpg") {
+                        if (fileExt == ".mp4" || fileExt == ".3gp" || fileExt == ".mpg" || fileExt == ".mov" || fileExt == ".avi") {
+                            // Video file
                             videoView.visibility = View.VISIBLE
                             imageView.visibility = View.INVISIBLE
                             mediaType = "video"
                             
-                            // Create and set up ExoPlayer
-                            val player = androidx.media3.exoplayer.ExoPlayer.Builder(requireContext()).build()
-                            videoView.player = player
-                            
-                            // Set media item and prepare
-                            val mediaItem = androidx.media3.common.MediaItem.fromUri(resourceURI)
-                            player.setMediaItem(mediaItem)
-                            player.prepare()
-                            player.playWhenReady = false
+                            try {
+                                // Create and set up ExoPlayer
+                                val player = androidx.media3.exoplayer.ExoPlayer.Builder(requireContext()).build()
+                                videoView.player = player
+                                
+                                // Set media item and prepare
+                                val mediaItem = androidx.media3.common.MediaItem.fromUri(resourceURI)
+                                player.setMediaItem(mediaItem)
+                                player.prepare()
+                                player.playWhenReady = false
+                                
+                                android.util.Log.d("UploadFragment", "Video player set up successfully")
+                            } catch (e: Exception) {
+                                android.util.Log.e("UploadFragment", "Error setting up video player", e)
+                                AppManager.getInstance(mainActivity)?.displayToast("Error loading video: ${e.message}")
+                            }
                         } else {
+                            // Image file
                             videoView.visibility = View.INVISIBLE
                             imageView.visibility = View.VISIBLE
-                            imageView.setImageURI(resourceURI)
-                            mediaType = "image"
+                            
+                            try {
+                                imageView.setImageURI(resourceURI)
+                                mediaType = "image"
+                                android.util.Log.d("UploadFragment", "Image loaded successfully")
+                            } catch (e: Exception) {
+                                android.util.Log.e("UploadFragment", "Error loading image", e)
+                                AppManager.getInstance(mainActivity)?.displayToast("Error loading image: ${e.message}")
+                            }
                         }
+                        
+                        // Show success message
+                        AppManager.getInstance(mainActivity)?.displayToast("Media selected successfully")
+                    } else {
+                        android.util.Log.w("UploadFragment", "No image selected or invalid path")
+                        AppManager.getInstance(mainActivity)?.displayToast("No media selected")
                     }
+                } else {
+                    android.util.Log.w("UploadFragment", "ImagePicker should not handle this result")
                 }
+            } else {
+                android.util.Log.d("UploadFragment", "Image picker cancelled or failed")
             }
         }
     }
@@ -158,6 +200,17 @@ class UploadFragment : Fragment(), View.OnClickListener {
         } catch (e: Exception) {
             android.util.Log.e("UploadFragment", "Error in onAttach", e)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh login status check when fragment resumes
+        refreshLoginStatusCheck()
+    }
+
+    private fun refreshLoginStatusCheck() {
+        val userInfo = AppManager.getInstance(mainActivity).userInfo
+        android.util.Log.d("UploadFragment", "Login status check - userInfo: $userInfo")
     }
 
     override fun onClick(v: View?) {
@@ -214,24 +267,41 @@ class UploadFragment : Fragment(), View.OnClickListener {
             return
         }
         
-        // Check permission first - handle both old and new Android versions
-        val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
+        // Check permissions - handle both old and new Android versions
+        val permissionsToRequest = mutableListOf<String>()
+        
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ - request granular media permissions
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_MEDIA_IMAGES)
+            }
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_MEDIA_VIDEO)
+            }
         } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            // Android 12 and below - request storage permission
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         }
         
-        if (ContextCompat.checkSelfPermission(mContext, permission) == PackageManager.PERMISSION_GRANTED) {
-            // Permission already granted, launch image picker
+        android.util.Log.d("UploadFragment", "Permissions to request: $permissionsToRequest")
+        
+        if (permissionsToRequest.isEmpty()) {
+            // All permissions already granted, launch image picker
+            android.util.Log.d("UploadFragment", "All permissions already granted, launching image picker")
             launchImagePicker()
         } else {
-            // Request permission
-            permissionLauncher?.launch(permission)
+            // Request missing permissions
+            android.util.Log.d("UploadFragment", "Requesting permissions: $permissionsToRequest")
+            permissionLauncher?.launch(permissionsToRequest.toTypedArray())
         }
     }
     
     private fun launchImagePicker() {
         try {
+            android.util.Log.d("UploadFragment", "Launching image picker...")
+            
             val intent = ImagePicker.create(this)
                 .returnMode(ReturnMode.ALL)
                 .folderMode(true)
@@ -241,11 +311,16 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 .single()
                 .includeVideo(true)
                 .showCamera(true)
-                .enableLog(false)
+                .enableLog(true) // Enable logging for debugging
                 .getIntent(requireContext())
             
-            imagePickerLauncher?.launch(intent)
-            android.util.Log.d("UploadFragment", "Image picker launched successfully")
+            if (intent != null) {
+                imagePickerLauncher?.launch(intent)
+                android.util.Log.d("UploadFragment", "Image picker launched successfully")
+            } else {
+                android.util.Log.e("UploadFragment", "Image picker intent is null")
+                AppManager.getInstance(mainActivity)?.displayToast("Failed to create image picker")
+            }
         } catch (e: Exception) {
             android.util.Log.e("UploadFragment", "Failed to launch image picker", e)
             AppManager.getInstance(mainActivity)?.displayToast("Failed to open image picker: ${e.message}")
