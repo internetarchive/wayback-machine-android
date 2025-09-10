@@ -30,6 +30,7 @@ import android.app.Activity
 class UploadFragment : Fragment(), View.OnClickListener {
     private var mainActivity: MainActivity? = null
     private var resourcePath: String? = null
+    private var resourceURI: android.net.Uri? = null
     private var fileExt: String? = null
     private var mediaType: String? = null
     private val PERMISSION_REQUEST_CODE = 1
@@ -169,6 +170,56 @@ class UploadFragment : Fragment(), View.OnClickListener {
         android.util.Log.d("UploadFragment", "Login status check - userInfo: $userInfo")
     }
 
+    private fun createUploadFile(): File? {
+        try {
+            return when {
+                resourceURI != null -> {
+                    // Handle content URI (from native picker)
+                    createFileFromContentURI()
+                }
+                resourcePath != null -> {
+                    // Handle file path (from custom picker)
+                    File(resourcePath!!)
+                }
+                else -> {
+                    android.util.Log.e("UploadFragment", "No resource path or URI available")
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("UploadFragment", "Error creating upload file", e)
+            return null
+        }
+    }
+
+    private fun createFileFromContentURI(): File? {
+        try {
+            val uri = resourceURI ?: return null
+            
+            // Create a temporary file in the app's cache directory
+            val tempDir = File(requireContext().cacheDir, "uploads")
+            if (!tempDir.exists()) {
+                tempDir.mkdirs()
+            }
+            
+            val tempFile = File(tempDir, "upload_${System.currentTimeMillis()}$fileExt")
+            
+            // Copy content from URI to temporary file
+            requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+                tempFile.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            
+            android.util.Log.d("UploadFragment", "Created temporary file: ${tempFile.absolutePath}")
+            return tempFile
+            
+        } catch (e: Exception) {
+            android.util.Log.e("UploadFragment", "Error creating file from content URI", e)
+            return null
+        }
+    }
+
     private fun handleNativePickerResult(uri: android.net.Uri) {
         try {
             android.util.Log.d("UploadFragment", "Handling native picker result: $uri")
@@ -208,6 +259,9 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
     private fun processSelectedMedia(uri: android.net.Uri, filePath: String) {
         try {
+            // Store the URI for later use in upload
+            resourceURI = uri
+            
             // Determine file extension
             fileExt = if (filePath.contains(".")) {
                 filePath.substring(filePath.lastIndexOf(".")).lowercase()
@@ -221,7 +275,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 }
             }
             
-            android.util.Log.d("UploadFragment", "File extension: $fileExt, Path: $filePath")
+            android.util.Log.d("UploadFragment", "File extension: $fileExt, Path: $filePath, URI: $uri")
             
             // Release any existing player
             videoView.player?.release()
@@ -282,18 +336,26 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 onUpload()
             }
             R.id.imageView -> {
-                if (resourcePath == null) return
+                if (resourcePath == null && resourceURI == null) return
 
                 val intent = Intent(requireActivity(), PhotoPreviewActivity::class.java)
+                if (resourcePath != null) {
                 intent.putStringArrayListExtra("photos", arrayListOf(resourcePath))
+                } else if (resourceURI != null) {
+                    intent.putExtra("photo_uri", resourceURI.toString())
+                }
 
                 startActivity(intent)
             }
             R.id.videoView -> {
-                if (resourcePath == null) return
+                if (resourcePath == null && resourceURI == null) return
 
                 val intent = Intent(requireActivity(), VideoPreviewActivity::class.java)
+                if (resourcePath != null) {
                 intent.putExtra("video", resourcePath)
+                } else if (resourceURI != null) {
+                    intent.putExtra("video_uri", resourceURI.toString())
+                }
 
                 startActivity(intent)
             }
@@ -454,8 +516,13 @@ class UploadFragment : Fragment(), View.OnClickListener {
             }
         }
         
-        // Create a File object from the resource path
-        val file = File(resourcePath!!)
+        // Handle file upload - create temporary file if needed
+        val file = createUploadFile()
+        
+        if (file == null) {
+            AppManager.getInstance(mainActivity)?.displayToast("Could not prepare file for upload")
+            return
+        }
         
         com.internetarchive.waybackmachine.global.APIManager.getInstance(mainActivity).uploadFile(
             file,
@@ -528,7 +595,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
             AppManager.getInstance(mainActivity).displayToast("Subject is required")
             return false
         }
-        if (resourcePath == null) {
+        if (resourcePath == null && resourceURI == null) {
             AppManager.getInstance(mainActivity).displayToast("You need to attach photo or video")
             return false
         }
@@ -545,6 +612,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
         val minutes = totalMinutes % minutesInAnHour
 
         val hours = totalMinutes / minutesInAnHour
+
 
 
         var ret = ""
