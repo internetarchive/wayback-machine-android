@@ -94,6 +94,13 @@ class UploadFragment : Fragment(), View.OnClickListener {
                 val data = result.data
                 android.util.Log.d("UploadFragment", "Image picker data: $data")
                 
+                // Handle native Android photo picker result (Android 13+)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU && data?.data != null) {
+                    handleNativePickerResult(data.data!!)
+                    return@registerForActivityResult
+                }
+                
+                // Handle custom image picker result
                 if (ImagePicker.shouldHandle(100, result.resultCode, data)) {
                     val image = ImagePicker.getFirstImageOrNull(data)
                     android.util.Log.d("UploadFragment", "Selected image: $image")
@@ -101,58 +108,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
                     if (image != null && image.path.isNotEmpty()) {
                         resourcePath = image.path
                         val resourceURI = android.net.Uri.parse(image.path)
-                        
-                        // Determine file extension
-                        fileExt = if (resourcePath!!.contains(".")) {
-                            resourcePath!!.substring(resourcePath!!.lastIndexOf(".")).lowercase()
-                        } else {
-                            ".jpg" // Default extension
-                        }
-                        
-                        android.util.Log.d("UploadFragment", "File extension: $fileExt, Path: $resourcePath")
-                        
-                        // Release any existing player
-                        videoView.player?.release()
-
-                        if (fileExt == ".mp4" || fileExt == ".3gp" || fileExt == ".mpg" || fileExt == ".mov" || fileExt == ".avi") {
-                            // Video file
-                            videoView.visibility = View.VISIBLE
-                            imageView.visibility = View.INVISIBLE
-                            mediaType = "video"
-                            
-                            try {
-                                // Create and set up ExoPlayer
-                                val player = androidx.media3.exoplayer.ExoPlayer.Builder(requireContext()).build()
-                                videoView.player = player
-                                
-                                // Set media item and prepare
-                                val mediaItem = androidx.media3.common.MediaItem.fromUri(resourceURI)
-                                player.setMediaItem(mediaItem)
-                                player.prepare()
-                                player.playWhenReady = false
-                                
-                                android.util.Log.d("UploadFragment", "Video player set up successfully")
-                            } catch (e: Exception) {
-                                android.util.Log.e("UploadFragment", "Error setting up video player", e)
-                                AppManager.getInstance(mainActivity)?.displayToast("Error loading video: ${e.message}")
-                            }
-                        } else {
-                            // Image file
-                            videoView.visibility = View.INVISIBLE
-                            imageView.visibility = View.VISIBLE
-                            
-                            try {
-                                imageView.setImageURI(resourceURI)
-                                mediaType = "image"
-                                android.util.Log.d("UploadFragment", "Image loaded successfully")
-                            } catch (e: Exception) {
-                                android.util.Log.e("UploadFragment", "Error loading image", e)
-                                AppManager.getInstance(mainActivity)?.displayToast("Error loading image: ${e.message}")
-                            }
-                        }
-                        
-                        // Show success message
-                        AppManager.getInstance(mainActivity)?.displayToast("Media selected successfully")
+                        processSelectedMedia(resourceURI, image.path)
                     } else {
                         android.util.Log.w("UploadFragment", "No image selected or invalid path")
                         AppManager.getInstance(mainActivity)?.displayToast("No media selected")
@@ -191,8 +147,8 @@ class UploadFragment : Fragment(), View.OnClickListener {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            if (context is MainActivity) {
-                mainActivity = context
+        if (context is MainActivity) {
+            mainActivity = context
                 mContext = context
             } else {
                 android.util.Log.w("UploadFragment", "Context is not MainActivity: ${context.javaClass.simpleName}")
@@ -211,6 +167,108 @@ class UploadFragment : Fragment(), View.OnClickListener {
     private fun refreshLoginStatusCheck() {
         val userInfo = AppManager.getInstance(mainActivity).userInfo
         android.util.Log.d("UploadFragment", "Login status check - userInfo: $userInfo")
+    }
+
+    private fun handleNativePickerResult(uri: android.net.Uri) {
+        try {
+            android.util.Log.d("UploadFragment", "Handling native picker result: $uri")
+            
+            // Get file path from URI
+            val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+            var filePath: String? = null
+            
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val columnIndex = it.getColumnIndex(android.provider.MediaStore.MediaColumns.DATA)
+                    if (columnIndex >= 0) {
+                        filePath = it.getString(columnIndex)
+                    }
+                }
+            }
+            
+            // If we can't get the file path, use the URI directly
+            if (filePath.isNullOrEmpty()) {
+                filePath = uri.toString()
+            }
+            
+            android.util.Log.d("UploadFragment", "File path from native picker: $filePath")
+            
+            if (!filePath.isNullOrEmpty()) {
+                resourcePath = filePath
+                processSelectedMedia(uri, filePath!!)
+            } else {
+                android.util.Log.w("UploadFragment", "Could not get file path from native picker")
+                AppManager.getInstance(mainActivity)?.displayToast("Could not access selected file")
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("UploadFragment", "Error handling native picker result", e)
+            AppManager.getInstance(mainActivity)?.displayToast("Error processing selected file: ${e.message}")
+        }
+    }
+
+    private fun processSelectedMedia(uri: android.net.Uri, filePath: String) {
+        try {
+            // Determine file extension
+            fileExt = if (filePath.contains(".")) {
+                filePath.substring(filePath.lastIndexOf(".")).lowercase()
+            } else {
+                // Try to get extension from MIME type
+                val mimeType = requireContext().contentResolver.getType(uri)
+                when {
+                    mimeType?.startsWith("video/") == true -> ".mp4"
+                    mimeType?.startsWith("image/") == true -> ".jpg"
+                    else -> ".jpg" // Default extension
+                }
+            }
+            
+            android.util.Log.d("UploadFragment", "File extension: $fileExt, Path: $filePath")
+            
+            // Release any existing player
+            videoView.player?.release()
+
+            if (fileExt == ".mp4" || fileExt == ".3gp" || fileExt == ".mpg" || fileExt == ".mov" || fileExt == ".avi") {
+                // Video file
+                videoView.visibility = View.VISIBLE
+                imageView.visibility = View.INVISIBLE
+                mediaType = "video"
+                
+                try {
+                    // Create and set up ExoPlayer
+                    val player = androidx.media3.exoplayer.ExoPlayer.Builder(requireContext()).build()
+                    videoView.player = player
+                    
+                    // Set media item and prepare
+                    val mediaItem = androidx.media3.common.MediaItem.fromUri(uri)
+                    player.setMediaItem(mediaItem)
+                    player.prepare()
+                    player.playWhenReady = false
+                    
+                    android.util.Log.d("UploadFragment", "Video player set up successfully")
+                } catch (e: Exception) {
+                    android.util.Log.e("UploadFragment", "Error setting up video player", e)
+                    AppManager.getInstance(mainActivity)?.displayToast("Error loading video: ${e.message}")
+                }
+                } else {
+                // Image file
+                videoView.visibility = View.INVISIBLE
+                imageView.visibility = View.VISIBLE
+                
+                try {
+                    imageView.setImageURI(uri)
+                    mediaType = "image"
+                    android.util.Log.d("UploadFragment", "Image loaded successfully")
+                } catch (e: Exception) {
+                    android.util.Log.e("UploadFragment", "Error loading image", e)
+                    AppManager.getInstance(mainActivity)?.displayToast("Error loading image: ${e.message}")
+                }
+            }
+            
+            // Show success message
+            AppManager.getInstance(mainActivity)?.displayToast("Media selected successfully")
+        } catch (e: Exception) {
+            android.util.Log.e("UploadFragment", "Error processing selected media", e)
+            AppManager.getInstance(mainActivity)?.displayToast("Error processing media: ${e.message}")
+        }
     }
 
     override fun onClick(v: View?) {
@@ -302,6 +360,23 @@ class UploadFragment : Fragment(), View.OnClickListener {
         try {
             android.util.Log.d("UploadFragment", "Launching image picker...")
             
+            // Try native Android Photo Picker first (Android 13+)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                try {
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                    intent.type = "*/*"
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                    
+                    imagePickerLauncher?.launch(intent)
+                    android.util.Log.d("UploadFragment", "Native photo picker launched successfully")
+                    return
+                } catch (e: Exception) {
+                    android.util.Log.w("UploadFragment", "Native photo picker failed, falling back to custom picker", e)
+                }
+            }
+            
+            // Fallback to custom image picker for older Android versions
             val intent = ImagePicker.create(this)
                 .returnMode(ReturnMode.ALL)
                 .folderMode(true)
@@ -316,8 +391,8 @@ class UploadFragment : Fragment(), View.OnClickListener {
             
             if (intent != null) {
                 imagePickerLauncher?.launch(intent)
-                android.util.Log.d("UploadFragment", "Image picker launched successfully")
-            } else {
+                android.util.Log.d("UploadFragment", "Custom image picker launched successfully")
+                } else {
                 android.util.Log.e("UploadFragment", "Image picker intent is null")
                 AppManager.getInstance(mainActivity)?.displayToast("Failed to create image picker")
             }
@@ -425,7 +500,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
                             .setTitle("Successfully Uploaded")
                             .setView(txtView)
                             .setPositiveButton("OK") { _, _ -> }
-                            .show()
+                        .show()
                     }
                 } else {
                     mainActivity?.let { activity ->
@@ -433,7 +508,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
                             .setTitle("Uploading failed")
                             .setMessage(err ?: "Unknown error")
                             .setPositiveButton("OK") { _, _ -> }
-                            .show()
+                        .show()
                     }
                 }
             }
