@@ -10,15 +10,28 @@ android {
         applicationId "com.internetarchive.waybackmachine"
         minSdk 21
         targetSdk 35
-        versionCode 36
-        versionName "1.8.0"
+        versionCode 37
+        versionName "1.9.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            
+            // ProGuard configuration - use default rules if custom rules don't exist
+            if (file('proguard-rules.pro').exists()) {
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            } else {
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            }
+            
+            // Enable optimizations for release builds
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            zipAlignEnabled true
         }
     }
     

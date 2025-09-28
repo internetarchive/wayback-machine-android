@@ -4,11 +4,18 @@ The Wayback Machine Android App is a mobile application that allows users to acc
 
 ## Features
 
-- Archive web pages using the Wayback Machine
-- View recent and first version of websites
-- Login/Signup options available
-- Upload to your library at Internet Archive
-- Simple and intuitive user interface
+- **Archive web pages** using the Wayback Machine
+- **View recent and first versions** of websites
+- **User Authentication** with login/signup options
+- **Real file uploads** to your Internet Archive library
+  - Upload images and videos directly to archive.org
+  - Automatic metadata tagging and organization
+  - Professional upload progress indicators
+- **Enhanced User Experience**
+  - Smooth animations and loading states
+  - Intuitive file selection and management
+  - Comprehensive error handling and user feedback
+- **Production-ready** with optimized performance and clean code
 
 ## Setup Instructions
 
