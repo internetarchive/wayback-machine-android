@@ -10,15 +10,22 @@ android {
         applicationId "com.internetarchive.waybackmachine"
         minSdk 21
         targetSdk 35
-        versionCode 36
-        versionName "1.8.0"
+        versionCode 37
+        versionName "1.9.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // Enable optimizations for release builds
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            zipAlignEnabled true
         }
     }
     
