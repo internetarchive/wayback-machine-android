@@ -6,3 +6,12 @@
 /build
 /captures
 .externalNativeBuild
+
+
+# Release files
+/app/release/
+*.aab
+*.apk
+/app/build/
+/gradle/
+.gradle/

@@ -42,12 +42,10 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         try {
-            android.util.Log.d("SimpleProfileFragment", "Creating simple profile fragment view")
             
             // Create a proper profile layout instead of reusing login form
             val view = createProfileView()
             
-            android.util.Log.d("SimpleProfileFragment", "Simple profile fragment view created successfully")
             return view
             
         } catch (e: Exception) {
@@ -152,7 +150,6 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
             super.onAttach(context)
             if (context is MainActivity) {
                 mainActivity = context
-                android.util.Log.d("SimpleProfileFragment", "Fragment attached successfully to MainActivity")
             } else {
                 android.util.Log.w("SimpleProfileFragment", "Context is not MainActivity: ${context.javaClass.simpleName}")
             }
@@ -164,7 +161,6 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
-            android.util.Log.d("SimpleProfileFragment", "Fragment created successfully")
         } catch (e: Exception) {
             android.util.Log.e("SimpleProfileFragment", "Error in onCreate", e)
         }
@@ -183,7 +179,6 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
                     
                     if (isCurrentlyLoggedIn) {
                         // User is logged in, handle logout
-                        android.util.Log.d("SimpleProfileFragment", "User clicked logout")
                         logout()
                     } else {
                         // User is not logged in, handle login
@@ -246,7 +241,13 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
                     mainActivity?.hideProgressBar()
                     
                     if (!success) {
-                        AppManager.getInstance(mainActivity).displayToast(error ?: "Login failed")
+                        val errorMessage = when {
+                            error.isNullOrEmpty() -> "Login failed. Please check your email and password."
+                            error.contains("401") || error.contains("Unauthorized") -> "Invalid email or password. Please try again."
+                            error.contains("network", ignoreCase = true) -> "Network error. Please check your internet connection."
+                            else -> error
+                        }
+                        AppManager.getInstance(mainActivity).displayToast(errorMessage)
                     } else {
                         try {
                             // Retrieve the "values" JSONObject
@@ -304,7 +305,6 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
         try {
             val userInfo = AppManager.getInstance(mainActivity).userInfo
             if (userInfo != null) {
-                android.util.Log.d("SimpleProfileFragment", "Updating UI for logged-in user: ${userInfo.username}")
                 
                 // Update button text to show logout option
                 btnLogin.text = "Logout"

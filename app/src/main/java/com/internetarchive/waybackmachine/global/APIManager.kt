@@ -40,8 +40,6 @@ class APIManager private constructor(context: Context?) {
                     // Prepare the login data - use the original format
                     val postData = "email=$email&password=$password"
                     
-                    android.util.Log.d("APIManager", "Attempting login to: $url")
-                    android.util.Log.d("APIManager", "Post data: $postData")
                     
                     // Send the request
                     val outputStream = connection.outputStream
@@ -53,12 +51,7 @@ class APIManager private constructor(context: Context?) {
                     
                     // Get the response
                     val responseCode = connection.responseCode
-                    android.util.Log.d("APIManager", "Response code: $responseCode")
-                    android.util.Log.d("APIManager", "Response message: ${connection.responseMessage}")
                     
-                    // Log all response headers for debugging
-                    val headerFields = connection.headerFields
-                    android.util.Log.d("APIManager", "Response headers: $headerFields")
                     
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         // Read the response
@@ -74,7 +67,6 @@ class APIManager private constructor(context: Context?) {
                         reader.close()
                         inputStream.close()
                         
-                        android.util.Log.d("APIManager", "Response body: ${response.toString()}")
                         
                         try {
                             // Parse the JSON response
@@ -85,7 +77,6 @@ class APIManager private constructor(context: Context?) {
                             
                             if (success) {
                                 // Login successful
-                                android.util.Log.d("APIManager", "Login successful")
                                 completion(true, null, jsonResponse)
                             } else {
                                 // Login failed - get error message from response
@@ -177,10 +168,107 @@ class APIManager private constructor(context: Context?) {
         }
     }
 
-    fun uploadFile(file: File, title: String, description: String, subject: String, completion: (Boolean, String?) -> Unit) {
-        // TODO: Implement with proper HTTP client
-        // For now, return a mock response
-        completion(false, "Upload not implemented yet")
+    fun uploadFile(file: File, title: String, description: String, subject: String, s3AccessKey: String, s3SecretKey: String, username: String, completion: (Boolean, String?) -> Unit) {
+        try {
+            // Generate unique identifier
+            val identifier = "${username}_${System.currentTimeMillis() / 1000L}"
+            val filename = "$identifier${getFileExtension(file.name)}"
+            
+            // Prepare upload parameters
+            val params = mapOf(
+                "identifier" to identifier,
+                "filename" to filename,
+                "path" to file.absolutePath,
+                "s3accesskey" to s3AccessKey,
+                "s3secretkey" to s3SecretKey,
+                "title" to title,
+                "description" to description,
+                "tags" to subject,
+                "username" to username,
+                "mediatype" to if (filename.lowercase().contains(".mp4")) "movies" else "image"
+            )
+            
+            // Call the real upload implementation
+            uploadFileToS3(params) { success, _, _, error ->
+                if (success) {
+                    completion(true, identifier)
+                } else {
+                    completion(false, "Upload failed: $error")
+                }
+            }
+            
+        } catch (e: Exception) {
+            completion(false, "Upload error: ${e.message}")
+        }
+    }
+    
+    private fun getFileExtension(filename: String): String {
+        return if (filename.contains(".")) {
+            filename.substring(filename.lastIndexOf(".")).lowercase()
+        } else {
+            ".jpg" // Default extension
+        }
+    }
+    
+    private fun getFileSize(bytes: Long): String {
+        return when {
+            bytes < 1024 -> "$bytes B"
+            bytes < 1024 * 1024 -> "${bytes / 1024} KB"
+            bytes < 1024 * 1024 * 1024 -> "${bytes / (1024 * 1024)} MB"
+            else -> "${bytes / (1024 * 1024 * 1024)} GB"
+        }
+    }
+    
+    private fun uploadFileToS3(params: Map<String, String>, completion: (Boolean, String?, String?, String?) -> Unit) {
+        try {
+            val authorization = "LOW " + params["s3accesskey"] + ":" + params["s3secretkey"]
+            val url = "https://s3.us.archive.org" + "/" + params["identifier"] + "/" + params["filename"]
+            val file = File(params["path"]!!)
+            
+            Thread {
+                try {
+                    val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+                    connection.requestMethod = "PUT"
+                    connection.setRequestProperty("Content-Type", "application/octet-stream")
+                    connection.setRequestProperty("X-File-Name", params["filename"]!!)
+                    connection.setRequestProperty("x-amz-acl", "bucket-owner-full-control")
+                    connection.setRequestProperty("x-amz-auto-make-bucket", "1")
+                    connection.setRequestProperty("x-archive-meta-collection", "opensource_media")
+                    connection.setRequestProperty("x-archive-meta-mediatype", params["mediatype"]!!)
+                    connection.setRequestProperty("x-archive-meta-title", params["title"]!!)
+                    connection.setRequestProperty("x-archive-meta-description", params["description"]!!)
+                    connection.setRequestProperty("x-archive-meta-subject", params["tags"]!!)
+                    connection.setRequestProperty("x-archive-meta-creator", params["username"]!!)
+                    connection.setRequestProperty("x-archive-meta-licenseurl", "http://creativecommons.org/licenses/by/3.0/")
+                    connection.setRequestProperty("x-archive-meta-uploader", params["username"]!!)
+                    connection.setRequestProperty("x-archive-meta-publicdate", java.text.SimpleDateFormat("yyyy-MM-dd").format(java.util.Date()))
+                    connection.setRequestProperty("authorization", authorization)
+                    connection.doOutput = true
+                    
+                    // Upload the file
+                    connection.outputStream.use { output ->
+                        file.inputStream().use { input ->
+                            input.copyTo(output)
+                        }
+                    }
+                    
+                    val responseCode = connection.responseCode
+                    
+                    if (responseCode in 200..299) {
+                        completion(true, getFileSize(file.length()), url, null)
+                    } else {
+                        val errorMessage = "HTTP $responseCode: ${connection.responseMessage}"
+                        completion(false, null, null, errorMessage)
+                    }
+                    
+                } catch (e: Exception) {
+                    completion(false, null, null, e.message)
+                }
+            }.start()
+            
+        } catch (e: Exception) {
+            completion(false, null, null, e.message)
+        }
     }
 
     fun checkPlaybackAvailability(url: String, timestamp: String, completion: (Boolean, String?) -> Unit) {
@@ -189,13 +277,6 @@ class APIManager private constructor(context: Context?) {
             Thread {
                 try {
                     // Construct the Wayback Machine API URL
-                    val waybackUrl = if (timestamp.isEmpty()) {
-                        // For recent version, check if URL exists in archive
-                        "https://web.archive.org/web/*/http://$url"
-                    } else {
-                        // For specific timestamp
-                        "https://web.archive.org/web/$timestamp/http://$url"
-                    }
                     
                     // For now, we'll use a simple approach - construct the Wayback Machine URL
                     // and let the user open it to see if it exists
@@ -220,13 +301,4 @@ class APIManager private constructor(context: Context?) {
         }
     }
 
-    private fun getFileSize(size: Long): String {
-        val kb = size / 1024
-        val mb = kb / 1024
-        return if (mb > 0) {
-            "$mb MB"
-        } else {
-            "$kb KB"
-        }
-    }
 }
