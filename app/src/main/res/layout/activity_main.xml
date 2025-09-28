@@ -37,17 +37,51 @@
         android:id="@+id/containerIndicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/indicatorContainerColor"
+        android:background="#CC000000"
         android:visibility="invisible">
 
-        <ProgressBar
-            android:id="@+id/indicator_save"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="visible"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/white" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/loading_background"
+            android:padding="24dp"
+            android:elevation="8dp">
+
+            <ProgressBar
+                android:id="@+id/indicator_save"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:visibility="visible"
+                android:indeterminate="true"
+                android:indeterminateTint="#FF4081"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+            <TextView
+                android:id="@+id/loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Uploading..."
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/loading_subtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Please wait while your file is being uploaded to archive.org"
+                android:textColor="#CCFFFFFF"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:maxLines="2" />
+
+        </LinearLayout>
 
     </FrameLayout>
 

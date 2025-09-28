@@ -70,7 +70,6 @@ class AboutFramgment : Fragment() {
         txtVersion.text = versionText
         
         // Also log the version for debugging
-        android.util.Log.d("AboutFragment", "App Version: $versionName")
 
         return view
     }

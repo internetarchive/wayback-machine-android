@@ -22,14 +22,12 @@ class AppManager private constructor(context: Context?) {
 
     init {
         try {
-            android.util.Log.d("AppManager", "🔧 Initializing AppManager")
             mContext = context
             prefs = mContext?.getSharedPreferences(PreferencesKey, Context.MODE_PRIVATE)
             
             // Check if stored user data is valid, if not clear it
             cleanupInvalidUserData()
             
-            android.util.Log.d("AppManager", "✅ AppManager initialized successfully")
         } catch (e: Exception) {
             android.util.Log.e("AppManager", "❌ Error initializing AppManager", e)
         }
@@ -42,7 +40,6 @@ class AppManager private constructor(context: Context?) {
                 // If userInfo is not null but doesn't meet our validation criteria, clear it
                 if (currentUserInfo.username.isEmpty() || currentUserInfo.email.isEmpty() || 
                     currentUserInfo.loggedInSig.isEmpty() || currentUserInfo.loggedInSig.length <= 50) {
-                    android.util.Log.d("AppManager", "🧹 Cleaning up invalid user data")
                     userInfo = null
                 }
             }

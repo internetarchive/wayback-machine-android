@@ -39,7 +39,6 @@ class AccountFragment : Fragment(), View.OnClickListener {
         try {
             if (context is MainActivity) {
                 mainActivity = context
-                android.util.Log.d("AccountFragment", "Successfully attached to MainActivity")
             } else {
                 android.util.Log.w("AccountFragment", "Context is not MainActivity: ${context.javaClass.simpleName}")
             }

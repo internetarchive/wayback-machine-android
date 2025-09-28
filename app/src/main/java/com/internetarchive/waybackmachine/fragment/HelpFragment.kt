@@ -38,7 +38,6 @@ class HelpFragment : Fragment() {
                 }
             }.attach()
 
-            android.util.Log.d("HelpFragment", "Help section initialized successfully with ${adapter.itemCount} pages")
             
         } catch (e: Exception) {
             android.util.Log.e("HelpFragment", "Failed to initialize help section", e)
