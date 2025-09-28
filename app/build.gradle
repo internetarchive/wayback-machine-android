@@ -19,7 +19,13 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // ProGuard configuration - use default rules if custom rules don't exist
+            if (file('proguard-rules.pro').exists()) {
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            } else {
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            }
             
             // Enable optimizations for release builds
             debuggable false

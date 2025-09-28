@@ -2,9 +2,6 @@
 
 All notable changes to the Wayback Machine Android App will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [1.9.0] - 2024-09-28
 
 ### Added
@@ -73,5 +70,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version History
 
 - **1.9.0** - Real upload functionality, enhanced UX, production-ready code
-- **1.8.0** - Basic upload interface and authentication
+- **1.8.0** - Basic upload interface and authentication and target latest Android SDK
 - **1.7.0** - Initial Wayback Machine functionality
