@@ -2,6 +2,31 @@
 
 The Wayback Machine Android App is a mobile application that allows users to access the Internet Archive's Wayback Machine directly from their Android devices.
 
+## Screenshots
+
+  ### Splash screen
+  <img src="screenshots/splashScreen.png" alt="Splash Screen" width="300"/>
+  
+  ### Home screen
+  <img src="screenshots/homeScreen.png" alt="Home Screen" width="300"/>
+
+  ### Feed screen
+  <img src="screenshots/feed.png" alt="Feed Screen" width="300"/>
+  
+  ### Login screen
+  <img src="screenshots/loginScreen.png" alt="Login Screen" width="300"/>
+  
+  ### Registration screen
+  <img src="screenshots/registrationScreen.png" alt="Registration Screen" width="300"/>
+  
+  ### Quick guides (1-3)
+  <img src="screenshots/quickGuide-1.png" alt="Quick Guide 1" width="300"/>
+  <img src="screenshots/quickGuide-2.png" alt="Quick Guide 2" width="300"/>
+  <img src="screenshots/quickGuide-3.png" alt="Quick Guide 3" width="300"/>
+
+  ### Upload screen
+  <img src="screenshots/uploadScreen.png" alt="Upload Screen" width="300"/>
+
 ## Features
 
 - **Archive web pages** using the Wayback Machine
