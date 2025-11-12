@@ -644,9 +644,9 @@ class APIManager private constructor(context: Context?) {
         return try {
             mContext?.let { context ->
                 AppManager.getInstance(context).getVersionName()
-            } ?: "1.9.0"
+            } ?: "2.0.0"
         } catch (e: Exception) {
-            "1.9.0"
+            "2.0.0"
         }
     }
     
