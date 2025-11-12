@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/dialog_background"
+    android:elevation="8dp"
+    android:gravity="center_horizontal">
+
+        <!-- Header with title and close button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/save_page_now_dialog_title"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/fcBlack"
+                android:maxLines="2"
+                android:ellipsize="none"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:gravity="center" />
+
+            <ImageView
+                android:id="@+id/btnClose"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:contentDescription="@string/close"
+                android:visibility="invisible"
+                android:padding="4dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:tint="@color/fcBlack" />
+
+        </LinearLayout>
+
+        <!-- Progress indicator -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:indeterminate="true"
+            android:visibility="visible"
+            android:indeterminateTint="@color/colorPrimary" />
+
+        <!-- Status message -->
+        <TextView
+            android:id="@+id/statusMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_page_now_status_initializing"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:textColor="@color/fcBlack"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:maxLines="10"
+            android:ellipsize="none"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+
+        <!-- View Snapshot Button (shown when successful) -->
+        <Button
+            android:id="@+id/btnViewSnapshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_snapshot"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_marginTop="8dp" />
+
+        <!-- Error message (shown when failed) -->
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:textAlignment="center"
+            android:visibility="invisible"
+            android:padding="8dp"
+            android:maxLines="10"
+            android:ellipsize="none"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+
+</LinearLayout>
+

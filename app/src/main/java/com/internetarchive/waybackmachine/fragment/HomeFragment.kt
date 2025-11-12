@@ -17,6 +17,7 @@ import com.internetarchive.waybackmachine.activity.MainActivity
 import com.internetarchive.waybackmachine.activity.WebpageActivity
 import com.internetarchive.waybackmachine.global.APIManager
 import com.internetarchive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.dialog.SavePageNowDialog
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -90,9 +91,32 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         if (!validateURL(url)) {
             AppManager.getInstance(context).displayToast("Invalid URL")
-        } else {
-            openWebPage(AppManager.getInstance(context).WebURL + "save/" + url)
+            return
         }
+
+        // Check if user is logged in
+        val userInfo = AppManager.getInstance(context).userInfo
+        if (userInfo == null || userInfo.loggedInSig.isEmpty() || userInfo.loggedInSig.length <= 50) {
+            AppManager.getInstance(context).displayToast(
+                context?.getString(R.string.save_page_now_not_logged_in) ?: "Please login to save pages"
+            )
+            return
+        }
+
+        // Show the Save Page Now dialog
+        // Check if fragment is still attached and activity is valid
+        val activity = activity
+        if (!isAdded || context == null || activity == null || activity.isFinishing) {
+            return
+        }
+        
+        val dialog = SavePageNowDialog(
+            requireContext(),
+            url,
+            userInfo.loggedInSig,
+            userInfo.loggedInUser
+        )
+        dialog.show()
     }
 
     private fun onRecent() {

@@ -27,6 +27,9 @@ class SigninFragment : Fragment(), View.OnClickListener {
     private lateinit var btnSignUp: TextView
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
+    
+    // Flag to prevent multiple simultaneous login attempts
+    private var isLoginInProgress = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -105,6 +108,12 @@ class SigninFragment : Fragment(), View.OnClickListener {
 
         when (v.id) {
             R.id.btnLogin -> {
+                // Prevent multiple simultaneous clicks
+                if (isLoginInProgress) {
+                    android.util.Log.d("SigninFragment", "Login already in progress, ignoring click")
+                    return
+                }
+                
                 val userInfo = AppManager.getInstance(mainActivity).userInfo
                 val isCurrentlyLoggedIn = userInfo != null && userInfo.loggedInSig.isNotEmpty() && 
                                         userInfo.username.isNotEmpty() && userInfo.email.isNotEmpty() &&
@@ -143,12 +152,27 @@ class SigninFragment : Fragment(), View.OnClickListener {
     }
 
     private fun login(email: String, password: String) {
+        // Prevent multiple simultaneous login attempts
+        if (isLoginInProgress) {
+            android.util.Log.w("SigninFragment", "Login already in progress")
+            return
+        }
+        
+        isLoginInProgress = true
+        btnLogin.isEnabled = false
+        btnLogin.alpha = 0.5f
+        
         mainActivity?.showProgressBar()
 
         APIManager.getInstance(mainActivity).login(email, password) { success, error, data->
             
             // Ensure UI operations run on the main thread
             mainActivity?.runOnUiThread {
+                // Reset login state
+                isLoginInProgress = false
+                btnLogin.isEnabled = true
+                btnLogin.alpha = 1.0f
+                
                 if (!success) {
                     android.util.Log.e("SigninFragment", "Login failed: $error")
                     val errorMessage = when {
