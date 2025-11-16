@@ -45,7 +45,7 @@
         <activity
             android:name=".activity.OfferdialogActivity"
             android:theme="@style/Theme.TransparentDim"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="exported-activity">
             <intent-filter>
