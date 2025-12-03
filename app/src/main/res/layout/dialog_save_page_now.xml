@@ -30,7 +30,9 @@
                 android:ellipsize="none"
                 android:scrollHorizontally="false"
                 android:singleLine="false"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textAlignment="center"
+                android:paddingEnd="8dp" />
 
             <ImageView
                 android:id="@+id/btnClose"
@@ -42,7 +44,8 @@
                 android:padding="4dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:tint="@color/fcBlack" />
+                android:tint="@color/fcBlack"
+                android:layout_gravity="center_vertical" />
 
         </LinearLayout>
 
@@ -71,7 +74,9 @@
             android:maxLines="10"
             android:ellipsize="none"
             android:scrollHorizontally="false"
-            android:singleLine="false" />
+            android:singleLine="false"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp" />
 
         <!-- View Snapshot Button (shown when successful) -->
         <Button
@@ -100,8 +105,10 @@
             android:textSize="14sp"
             android:textColor="@color/colorPrimary"
             android:textAlignment="center"
+            android:gravity="center"
             android:visibility="invisible"
             android:padding="8dp"
+            android:paddingTop="4dp"
             android:maxLines="10"
             android:ellipsize="none"
             android:scrollHorizontally="false"

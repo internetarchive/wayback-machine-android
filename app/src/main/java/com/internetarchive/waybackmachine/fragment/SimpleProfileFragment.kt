@@ -253,7 +253,7 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
         btnLogin.alpha = 0.5f
         
         try {
-            mainActivity?.showProgressBar()
+            mainActivity?.showProgressBar("Logging in...", "Please wait while we sign you in")
             
             APIManager.getInstance(mainActivity).login(email, password) { success, error, data ->
                 mainActivity?.runOnUiThread {

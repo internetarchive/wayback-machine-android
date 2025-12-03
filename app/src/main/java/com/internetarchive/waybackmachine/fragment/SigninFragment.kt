@@ -162,7 +162,7 @@ class SigninFragment : Fragment(), View.OnClickListener {
         btnLogin.isEnabled = false
         btnLogin.alpha = 0.5f
         
-        mainActivity?.showProgressBar()
+        mainActivity?.showProgressBar("Logging in...", "Please wait while we sign you in")
 
         APIManager.getInstance(mainActivity).login(email, password) { success, error, data->
             

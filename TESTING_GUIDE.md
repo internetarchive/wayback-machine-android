@@ -1,9 +1,73 @@
-If you have the apk file please follow the below instructions to test the app
-- Open the "File Manager" or "Downloads" app on your Android device.
-- Locate the APK file you want to install. By default, downloaded files are usually stored in the "Downloads" folder, but you may have   saved it in a different location.
-- Tap on the APK file to initiate the installation process. A prompt may appear asking for your confirmation to install applications from unknown sources. Android devices usually prevent the installation of apps from sources other than the Google Play Store as a security measure.
-- If the prompt appears, you need to enable the "Unknown Sources" option. Tap on "Settings" when prompted, and it will take you to the relevant settings page. Alternatively, you can manually navigate to the settings on your device and search for "Unknown Sources" or "Install unknown apps." Enable the option for the file manager or web browser you're using to access the APK file.
-- Once the "Unknown Sources" option is enabled, go back to the APK file and tap on it again. This time, the installation process should begin.
-- You may be asked to review the app permissions before proceeding with the installation. Read through them and tap on the "Install" button to continue.
-- The installation process will take a few moments, and once it's complete, you'll see an "App installed" or similar message.
-- You can then open the app directly from the installation screen or find it on your device's app drawer.
+# Quick Testing Guide - Wayback Machine Android App
+
+A concise guide for testing the Wayback Machine Android app.
+
+## Installing the APK
+
+### Step 1: Enable Unknown Sources
+- **Android 8.0+**: Settings → Apps → Special app access → Install unknown apps → Enable for your browser/file manager
+- **Android 7.1 and earlier**: Settings → Security → Enable "Unknown sources"
+
+### Step 2: Download & Install
+1. Download the APK from the shared link
+2. Open **Files** app → **Downloads**
+3. Tap the APK file → **Install**
+4. Tap **Open** to launch
+
+## Quick Test Checklist
+
+### Basic Functionality
+- [ ] App launches without crashes
+- [ ] All 5 tabs are accessible (Home, Help, About, Account, Upload)
+- [ ] User can login with Internet Archive account
+- [ ] User can logout
+
+### Home Tab - Save Page Now (SPN2)
+- [ ] Dialog appears with animated "Saving page..." title
+- [ ] Status updates during save process
+- [ ] Title changes to "Save succeeded" or "Save failed" after completion
+- [ ] "View the snapshot" button appears after success
+- [ ] Close button appears after completion
+- [ ] Dialog cannot be dismissed during save
+- [ ] Dialog can be dismissed after completion
+
+### Home Tab - View Archives
+- [ ] "View Recent Version" works
+- [ ] "View First Version" works
+
+### Upload Tab
+- [ ] Can select images/videos
+- [ ] Upload progress is visible
+- [ ] Upload completes successfully
+
+### Error Handling
+- [ ] Shows error when not logged in
+- [ ] Shows error for invalid URLs
+- [ ] Shows error for network issues
+- [ ] Error messages are clear
+
+## Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| APK won't install | Enable "Install from unknown sources" |
+| App crashes | Clear app data and reinstall |
+| Login fails | Check credentials, verify internet connection |
+| Save fails | Ensure logged in, check internet, verify URL |
+
+## Reporting Issues
+
+Include in bug reports:
+- Device model and Android version
+- App version (check in About tab)
+- Steps to reproduce
+- Screenshots (if possible)
+- Error messages
+
+**Contact:** info@archive.org (Subject: "Wayback Machine Android App - Bug Report")
+
+---
+
+**App Version:** 2.0.0  
+**Last Updated:** 2024-11-12
+

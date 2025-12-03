@@ -73,6 +73,10 @@
 
     <!-- Save Page Now Dialog -->
     <string name="save_page_now_dialog_title">Saving Page</string>
+    <string name="save_page_now_dialog_title_saving">Saving page</string>
+    <string name="save_page_now_dialog_title_succeeded">Save succeeded</string>
+    <string name="save_page_now_dialog_title_failed">Save failed</string>
+    <string name="save_page_now_dialog_title_recently_saved">Recently Saved</string>
     <string name="save_page_now_status_initializing">Initializing save request…</string>
     <string name="save_page_now_status_saving">Saving page to Wayback Machine…</string>
     <string name="save_page_now_status_pending">Processing your request…</string>

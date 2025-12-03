@@ -20,10 +20,13 @@ class SavePageNowDialog(
     context: Context,
     private val url: String,
     private val loggedInSig: String,
-    private val loggedInUser: String
+    private val loggedInUser: String,
+    private val s3AccessKey: String,
+    private val s3SecretKey: String
 ) : Dialog(context) {
 
     // View references
+    private lateinit var titleTextView: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var statusMessage: TextView
     private lateinit var btnViewSnapshot: android.widget.Button
@@ -35,8 +38,10 @@ class SavePageNowDialog(
     private var isCompleted = false
     private val handler = Handler(Looper.getMainLooper())
     private var statusCheckRunnable: Runnable? = null
+    private var titleAnimationRunnable: Runnable? = null
     private var pollCount = 0
     private val MAX_POLL_ATTEMPTS = 60 // Maximum 3 minutes (60 * 3 seconds)
+    private var dotCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +69,7 @@ class SavePageNowDialog(
         setCanceledOnTouchOutside(false)
 
         // Initialize views
+        titleTextView = findViewById(R.id.title)
         progressBar = findViewById(R.id.progressBar)
         statusMessage = findViewById(R.id.statusMessage)
         btnViewSnapshot = findViewById(R.id.btnViewSnapshot)
@@ -71,6 +77,7 @@ class SavePageNowDialog(
         btnClose = findViewById(R.id.btnClose)
 
         // Set initial status
+        startTitleAnimation() // Start animated "Saving page..." title
         statusMessage.text = context.getString(R.string.save_page_now_status_initializing)
         btnClose.visibility = View.INVISIBLE
         btnClose.isClickable = false
@@ -106,7 +113,7 @@ class SavePageNowDialog(
         statusMessage.text = context.getString(R.string.save_page_now_status_saving)
 
         // Request capture
-        APIManager.getInstance(context).requestCapture(url, loggedInSig, loggedInUser) { jobId, message ->
+        APIManager.getInstance(context).requestCapture(url, loggedInSig, loggedInUser, s3AccessKey, s3SecretKey) { jobId, message ->
             android.util.Log.d("SavePageNowDialog", "requestCapture callback: jobId=$jobId, message=$message")
             handler.post {
                 if (!isShowing) {
@@ -124,11 +131,13 @@ class SavePageNowDialog(
                          message.contains("already been made", ignoreCase = true))
                     
                     if (isSameSnapshot) {
-                        // Same snapshot already exists - show informational message and make dismissible
+                        // Same snapshot already exists - show "Recently Saved" title and make dismissible
                         // Don't poll for status since the snapshot already exists
                         android.util.Log.d("SavePageNowDialog", "Same snapshot detected, not polling for status")
                         isCompleted = true
+                        stopTitleAnimation() // Stop animated "Saving page..." dots
                         progressBar.visibility = View.GONE
+                        titleTextView.text = context.getString(R.string.save_page_now_dialog_title_recently_saved)
                         // Show the message in the statusMessage area (informational message)
                         // The message explains that the snapshot was already made recently
                         statusMessage.text = message ?: context.getString(R.string.save_page_now_status_success)
@@ -183,7 +192,9 @@ class SavePageNowDialog(
                 APIManager.getInstance(context).requestCaptureStatus(
                     jobId!!,
                     loggedInSig,
-                    loggedInUser
+                    loggedInUser,
+                    s3AccessKey,
+                    s3SecretKey
                 ) { result, error ->
                     handler.post {
                         if (isCompleted || !isShowing) {
@@ -220,8 +231,10 @@ class SavePageNowDialog(
 
     private fun showSuccess(waybackUrl: String) {
         isCompleted = true
+        stopTitleAnimation() // Stop animated dots
         this.waybackUrl = waybackUrl
         progressBar.visibility = View.GONE
+        titleTextView.text = context.getString(R.string.save_page_now_dialog_title_succeeded)
         statusMessage.text = context.getString(R.string.save_page_now_status_success)
         btnViewSnapshot.visibility = View.VISIBLE
         btnViewSnapshot.isClickable = true
@@ -256,7 +269,7 @@ class SavePageNowDialog(
                     }
                     else -> {
                         android.util.Log.d("SavePageNowDialog", "Using generic error message")
-                        "Failed to initiate save request. The server returned an empty response. Please check:\n1. You are logged in\n2. Your login session is still valid\n3. Try logging out and logging in again"
+                        "Failed to initiate save request. Please check:\n1. Your internet connection\n2. You are logged in (Login required for Save Page Now)\n3. Try again in a few moments"
                     }
                 }
                 
@@ -267,7 +280,9 @@ class SavePageNowDialog(
     
     private fun showError(error: String) {
         isCompleted = true
+        stopTitleAnimation() // Stop animated dots
         progressBar.visibility = View.GONE
+        titleTextView.text = context.getString(R.string.save_page_now_dialog_title_failed)
         statusMessage.text = context.getString(R.string.save_page_now_status_error)
         errorMessage.text = error
         errorMessage.visibility = View.VISIBLE
@@ -280,9 +295,43 @@ class SavePageNowDialog(
         setCanceledOnTouchOutside(true)
     }
 
+    private fun startTitleAnimation() {
+        stopTitleAnimation() // Stop any existing animation
+        
+        val baseTitle = context.getString(R.string.save_page_now_dialog_title_saving)
+        titleAnimationRunnable = object : Runnable {
+            override fun run() {
+                if (isCompleted || !isShowing) {
+                    return
+                }
+                
+                // Cycle through: "Saving page", "Saving page.", "Saving page..", "Saving page..."
+                val dots = ".".repeat(dotCount % 4)
+                titleTextView.text = "$baseTitle$dots"
+                dotCount++
+                
+                // Continue animation every 500ms
+                handler.postDelayed(this, 500)
+            }
+        }
+        
+        // Start animation
+        handler.post(titleAnimationRunnable!!)
+    }
+    
+    private fun stopTitleAnimation() {
+        titleAnimationRunnable?.let {
+            handler.removeCallbacks(it)
+            titleAnimationRunnable = null
+        }
+    }
+
     override fun dismiss() {
         // Mark as completed to stop any ongoing operations
         isCompleted = true
+        
+        // Stop title animation
+        stopTitleAnimation()
         
         // Cancel any pending status checks
         statusCheckRunnable?.let {
@@ -297,6 +346,9 @@ class SavePageNowDialog(
         // Mark as completed to stop any ongoing operations
         isCompleted = true
         
+        // Stop title animation
+        stopTitleAnimation()
+        
         // Clean up
         statusCheckRunnable?.let {
             handler.removeCallbacks(it)
@@ -308,6 +360,7 @@ class SavePageNowDialog(
         // Set up cancel listener to handle cleanup
         setOnCancelListener {
             isCompleted = true
+            stopTitleAnimation()
             statusCheckRunnable?.let {
                 handler.removeCallbacks(it)
                 statusCheckRunnable = null

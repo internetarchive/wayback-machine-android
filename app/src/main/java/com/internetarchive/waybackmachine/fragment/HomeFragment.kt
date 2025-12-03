@@ -94,27 +94,43 @@ class HomeFragment : Fragment(), View.OnClickListener {
             return
         }
 
-        // Check if user is logged in
-        val userInfo = AppManager.getInstance(context).userInfo
-        if (userInfo == null || userInfo.loggedInSig.isEmpty() || userInfo.loggedInSig.length <= 50) {
-            AppManager.getInstance(context).displayToast(
-                context?.getString(R.string.save_page_now_not_logged_in) ?: "Please login to save pages"
-            )
-            return
-        }
-
-        // Show the Save Page Now dialog
+        // Show the Save Page Now dialog (works without login - anonymous mode)
         // Check if fragment is still attached and activity is valid
         val activity = activity
         if (!isAdded || context == null || activity == null || activity.isFinishing) {
             return
         }
         
+        // Get user info if available (S3 keys preferred, cookies as fallback)
+        val userInfo = AppManager.getInstance(context).userInfo
+        val loggedInSig = if (userInfo != null && userInfo.loggedInSig.isNotEmpty() && userInfo.loggedInSig.length > 50) {
+            userInfo.loggedInSig
+        } else {
+            ""
+        }
+        val loggedInUser = if (userInfo != null && userInfo.loggedInUser.isNotEmpty()) {
+            userInfo.loggedInUser
+        } else {
+            ""
+        }
+        val s3AccessKey = if (userInfo != null && userInfo.s3AccessKey.isNotEmpty()) {
+            userInfo.s3AccessKey
+        } else {
+            ""
+        }
+        val s3SecretKey = if (userInfo != null && userInfo.s3SecretKey.isNotEmpty()) {
+            userInfo.s3SecretKey
+        } else {
+            ""
+        }
+        
         val dialog = SavePageNowDialog(
             requireContext(),
             url,
-            userInfo.loggedInSig,
-            userInfo.loggedInUser
+            loggedInSig,
+            loggedInUser,
+            s3AccessKey,
+            s3SecretKey
         )
         dialog.show()
     }
