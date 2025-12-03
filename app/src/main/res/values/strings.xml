@@ -71,4 +71,19 @@
     <string name="title_activity_photo_preview">PhotoPreviewActivity</string>
     <string name="view_pager_description">Description of the ViewPager</string>
 
+    <!-- Save Page Now Dialog -->
+    <string name="save_page_now_dialog_title">Saving Page</string>
+    <string name="save_page_now_dialog_title_saving">Saving page</string>
+    <string name="save_page_now_dialog_title_succeeded">Save succeeded</string>
+    <string name="save_page_now_dialog_title_failed">Save failed</string>
+    <string name="save_page_now_dialog_title_recently_saved">Recently Saved</string>
+    <string name="save_page_now_status_initializing">Initializing save request…</string>
+    <string name="save_page_now_status_saving">Saving page to Wayback Machine…</string>
+    <string name="save_page_now_status_pending">Processing your request…</string>
+    <string name="save_page_now_status_success">Page saved successfully!</string>
+    <string name="save_page_now_status_error">Failed to save page</string>
+    <string name="save_page_now_not_logged_in">Please login to save pages</string>
+    <string name="close">Close</string>
+    <string name="view_snapshot">View the snapshot</string>
+
 </resources>

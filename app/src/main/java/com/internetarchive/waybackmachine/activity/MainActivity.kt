@@ -349,6 +349,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showProgressBar() {
+        showProgressBar("Uploading...", "Please wait while your file is being uploaded to archive.org")
+    }
+    
+    fun showProgressBar(titleText: String, subText: String = "") {
         containerIndicator.visibility = View.VISIBLE
         disableNavigation()
         
@@ -356,6 +360,23 @@ class MainActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.indicator_save)
         if (progressBar != null) {
             progressBar.visibility = View.VISIBLE
+        }
+        
+        // Update text views with custom text
+        val loadingText = findViewById<TextView>(R.id.loading_text)
+        val loadingSubtext = findViewById<TextView>(R.id.loading_subtext)
+        
+        if (loadingText != null) {
+            loadingText.text = titleText
+        }
+        
+        if (loadingSubtext != null) {
+            if (subText.isNotEmpty()) {
+                loadingSubtext.text = subText
+                loadingSubtext.visibility = View.VISIBLE
+            } else {
+                loadingSubtext.visibility = View.GONE
+            }
         }
         
         // Add fade-in animation

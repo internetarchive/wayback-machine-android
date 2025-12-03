@@ -17,6 +17,7 @@ import com.internetarchive.waybackmachine.activity.MainActivity
 import com.internetarchive.waybackmachine.activity.WebpageActivity
 import com.internetarchive.waybackmachine.global.APIManager
 import com.internetarchive.waybackmachine.global.AppManager
+import com.internetarchive.waybackmachine.dialog.SavePageNowDialog
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -90,9 +91,48 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         if (!validateURL(url)) {
             AppManager.getInstance(context).displayToast("Invalid URL")
-        } else {
-            openWebPage(AppManager.getInstance(context).WebURL + "save/" + url)
+            return
         }
+
+        // Show the Save Page Now dialog (works without login - anonymous mode)
+        // Check if fragment is still attached and activity is valid
+        val activity = activity
+        if (!isAdded || context == null || activity == null || activity.isFinishing) {
+            return
+        }
+        
+        // Get user info if available (S3 keys preferred, cookies as fallback)
+        val userInfo = AppManager.getInstance(context).userInfo
+        val loggedInSig = if (userInfo != null && userInfo.loggedInSig.isNotEmpty() && userInfo.loggedInSig.length > 50) {
+            userInfo.loggedInSig
+        } else {
+            ""
+        }
+        val loggedInUser = if (userInfo != null && userInfo.loggedInUser.isNotEmpty()) {
+            userInfo.loggedInUser
+        } else {
+            ""
+        }
+        val s3AccessKey = if (userInfo != null && userInfo.s3AccessKey.isNotEmpty()) {
+            userInfo.s3AccessKey
+        } else {
+            ""
+        }
+        val s3SecretKey = if (userInfo != null && userInfo.s3SecretKey.isNotEmpty()) {
+            userInfo.s3SecretKey
+        } else {
+            ""
+        }
+        
+        val dialog = SavePageNowDialog(
+            requireContext(),
+            url,
+            loggedInSig,
+            loggedInUser,
+            s3AccessKey,
+            s3SecretKey
+        )
+        dialog.show()
     }
 
     private fun onRecent() {

@@ -29,6 +29,9 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
     private lateinit var btnSignUp: TextView
     private lateinit var txtEmail: EditText
     private lateinit var txtPassword: EditText
+    
+    // Flag to prevent multiple simultaneous login attempts
+    private var isLoginInProgress = false
 
     companion object {
         fun newInstance(): SimpleProfileFragment {
@@ -172,6 +175,12 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
         try {
             when (v.id) {
                 R.id.btnLogin -> {
+                    // Prevent multiple simultaneous clicks
+                    if (isLoginInProgress) {
+                        android.util.Log.d("SimpleProfileFragment", "Login already in progress, ignoring click")
+                        return
+                    }
+                    
                     val userInfo = AppManager.getInstance(mainActivity).userInfo
                     val isCurrentlyLoggedIn = userInfo != null && userInfo.loggedInSig.isNotEmpty() && 
                                             userInfo.username.isNotEmpty() && userInfo.email.isNotEmpty() &&
@@ -233,11 +242,26 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
     }
     
     private fun login(email: String, password: String) {
+        // Prevent multiple simultaneous login attempts
+        if (isLoginInProgress) {
+            android.util.Log.w("SimpleProfileFragment", "Login already in progress")
+            return
+        }
+        
+        isLoginInProgress = true
+        btnLogin.isEnabled = false
+        btnLogin.alpha = 0.5f
+        
         try {
-            mainActivity?.showProgressBar()
+            mainActivity?.showProgressBar("Logging in...", "Please wait while we sign you in")
             
             APIManager.getInstance(mainActivity).login(email, password) { success, error, data ->
                 mainActivity?.runOnUiThread {
+                    // Reset login state
+                    isLoginInProgress = false
+                    btnLogin.isEnabled = true
+                    btnLogin.alpha = 1.0f
+                    
                     mainActivity?.hideProgressBar()
                     
                     if (!success) {
@@ -291,6 +315,11 @@ class SimpleProfileFragment : Fragment(), View.OnClickListener {
             }
             
         } catch (e: Exception) {
+            // Reset login state on error
+            isLoginInProgress = false
+            btnLogin.isEnabled = true
+            btnLogin.alpha = 1.0f
+            
             android.util.Log.e("SimpleProfileFragment", "Error in login", e)
             mainActivity?.hideProgressBar()
             try {
